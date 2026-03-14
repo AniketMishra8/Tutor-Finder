@@ -22,6 +22,7 @@ export default function Register() {
   });
   
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,15 +31,18 @@ export default function Register() {
     });
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     
     try {
-      register(formData);
+      await register(formData);
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,8 +93,8 @@ export default function Register() {
                 </div>
               )}
 
-              <button type="submit" className="btn btn-primary login-submit-btn">
-                Create Account
+              <button type="submit" className="btn btn-primary login-submit-btn" disabled={isLoading}>
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
             </form>
             

@@ -35,7 +35,6 @@ export default function Navbar() {
       links.push({ to: '/dashboard', label: 'Dashboard' });
     } else if (user.role === 'teacher') {
       links.push({ to: '/dashboard', label: 'My Dashboard' });
-      links.push({ to: '/students', label: 'My Students' }); // Placeholder link
     } else if (user.role === 'parent') {
       links.push({ to: '/dashboard', label: 'Child Progress' });
       links.push({ to: '/find-tutor', label: 'Find Tutor' });

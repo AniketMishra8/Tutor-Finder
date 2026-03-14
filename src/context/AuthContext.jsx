@@ -2,90 +2,78 @@ import { createContext, useState, useEffect, useContext } from 'react';
 
 const AuthContext = createContext();
 
-const MOCK_USERS = [
-  { id: 'stu_123', email: 'alex@student.com', password: 'password', role: 'student', name: 'Alex Johnson' },
-  { id: 'teacher_1', email: 'priya@teacher.com', password: 'password', role: 'teacher', name: 'Dr. Priya Sharma' },
-  { id: 'parent_1', email: 'johnson@parent.com', password: 'password', role: 'parent', name: 'Mr. Johnson', studentEmail: 'alex@student.com' }
-];
+// Point this to your new Node Express server
+const API_URL = 'http://localhost:5000/api/auth';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [usersDb, setUsersDb] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Instead of loading from localStorage DB, we just check if we have a JWT token
   useEffect(() => {
-    // Initialize mock DB
-    let existingDb = localStorage.getItem('tutor_finder_db');
-    if (!existingDb) {
-      localStorage.setItem('tutor_finder_db', JSON.stringify(MOCK_USERS));
-      setUsersDb(MOCK_USERS);
-    } else {
-      setUsersDb(JSON.parse(existingDb));
-    }
-
-    // Check active session
-    const savedSession = localStorage.getItem('tutor_finder_session');
-    if (savedSession) {
-      try {
-        setUser(JSON.parse(savedSession));
-      } catch (e) {
-        console.error('Failed to parse session from localStorage');
+    const token = localStorage.getItem('tutor_finder_token');
+    if (token) {
+      // In a full production app, you would make a GET /api/auth/me request here
+      // to validate the token and get the fresh user profile. 
+      // For this prototype, if they have a user payload saved alongside the token, we load it.
+      const savedUser = localStorage.getItem('tutor_finder_user');
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.error("Failed to parse saved user");
+        }
       }
     }
     setLoading(false);
   }, []);
 
-  const login = (email, password) => {
-    const foundUser = usersDb.find(u => u.email === email && u.password === password);
-    if (!foundUser) {
-      throw new Error('Invalid email or password');
+  const login = async (email, password) => {
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to login');
     }
 
-    // If parent, find the linked student name
-    let sessionUser = { ...foundUser };
-    if (foundUser.role === 'parent') {
-      const child = usersDb.find(u => u.email === foundUser.studentEmail && u.role === 'student');
-      sessionUser.studentName = child ? child.name : 'your child';
-    }
-
-    // Remove password from active session
-    delete sessionUser.password;
+    // Save JWT token and basic user info to persist session
+    localStorage.setItem('tutor_finder_token', data.token);
+    localStorage.setItem('tutor_finder_user', JSON.stringify(data.user));
+    setUser(data.user);
     
-    setUser(sessionUser);
-    localStorage.setItem('tutor_finder_session', JSON.stringify(sessionUser));
-    return sessionUser;
+    return data.user;
   };
 
-  const register = (userData) => {
-    // Check if email already exists
-    if (usersDb.some(u => u.email === userData.email)) {
-      throw new Error('An account with this email already exists.');
+  const register = async (userData) => {
+    const response = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to register');
     }
 
-    // Validate parent linking
-    if (userData.role === 'parent') {
-      const childExists = usersDb.some(u => u.email === userData.studentEmail && u.role === 'student');
-      if (!childExists) {
-        throw new Error('We could not find a registered student with that email. Please ensure the student has registered first.');
-      }
-    }
+    // Auto-login after successful registration
+    localStorage.setItem('tutor_finder_token', data.token);
+    localStorage.setItem('tutor_finder_user', JSON.stringify(data.user));
+    setUser(data.user);
 
-    const newUser = {
-      ...userData,
-      id: `${userData.role}_${Date.now()}`
-    };
-
-    const updatedDb = [...usersDb, newUser];
-    setUsersDb(updatedDb);
-    localStorage.setItem('tutor_finder_db', JSON.stringify(updatedDb));
-    
-    // Auto-login after registration
-    return login(userData.email, userData.password);
+    return data.user;
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('tutor_finder_session');
+    localStorage.removeItem('tutor_finder_token');
+    localStorage.removeItem('tutor_finder_user');
   };
 
   return (

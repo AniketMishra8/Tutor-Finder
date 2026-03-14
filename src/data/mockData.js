@@ -154,6 +154,102 @@ export const tutors = [
       { name: "Varun G.", rating: 4, text: "Great for Commerce students. Very professional.", date: "1 month ago" },
       { name: "Deepa M.", rating: 4, text: "Helped me understand macroeconomics concepts deeply.", date: "3 months ago" }
     ]
+  },
+  {
+    id: 7,
+    name: "Dr. Sarah Chen",
+    avatar: "SC",
+    subjects: ["History", "Political Science"],
+    rating: 4.8,
+    reviews: 112,
+    aiMatchScore: 89,
+    verified: true,
+    experience: "12 years",
+    hourlyRate: 850,
+    mode: ["online"],
+    location: "Chennai, India",
+    bio: "Former university professor making history come alive through storytelling and primary source analysis. Expert in World History and Indian Politics.",
+    qualifications: ["PhD History - JNU", "MA Political Science"],
+    availability: ["Sat", "Sun"],
+    languages: ["English", "Tamil"],
+    totalStudents: 150,
+    totalSessions: 940,
+    responseTime: "< 12 hours",
+    reviewsList: [
+      { name: "John D.", rating: 5, text: "Makes historical events feel like a movie!", date: "1 week ago" }
+    ]
+  },
+  {
+    id: 8,
+    name: "Emilio Romano",
+    avatar: "ER",
+    subjects: ["Spanish", "French"],
+    rating: 4.9,
+    reviews: 305,
+    aiMatchScore: 95,
+    verified: true,
+    experience: "15 years",
+    hourlyRate: 1200,
+    mode: ["online", "offline"],
+    location: "Delhi, India",
+    bio: "Native Spanish speaker with native-level French proficiency. Uses immersive conversational techniques to build fluency fast. Prepares students for DELE/DELF exams.",
+    qualifications: ["BA Linguistics", "DELE Examiner Certified"],
+    availability: ["Tue", "Wed", "Thu", "Fri"],
+    languages: ["Spanish", "French", "English"],
+    totalStudents: 520,
+    totalSessions: 2100,
+    responseTime: "< 1 hour",
+    reviewsList: [
+      { name: "Anita K.", rating: 5, text: "Passed my DELF B2 thanks to Emilio!", date: "3 days ago" }
+    ]
+  },
+  {
+    id: 9,
+    name: "Neha Gupta",
+    avatar: "NG",
+    subjects: ["SAT Prep", "GRE Prep"],
+    rating: 4.7,
+    reviews: 210,
+    aiMatchScore: 92,
+    verified: false,
+    experience: "5 years",
+    hourlyRate: 1500,
+    mode: ["online"],
+    location: "Mumbai, India",
+    bio: "Scored 1580 on SAT and 335 on GRE. Specializes in test-taking strategies, time management, and algorithmic approaches to cracking standardized tests.",
+    qualifications: ["B.Tech - IIT Bombay", "MBA - Stanford"],
+    availability: ["Mon", "Wed", "Fri", "Sat", "Sun"],
+    languages: ["English", "Hindi"],
+    totalStudents: 280,
+    totalSessions: 1150,
+    responseTime: "< 30 min",
+    reviewsList: [
+      { name: "Sam S.", rating: 5, text: "My SAT math score jumped 120 points.", date: "1 month ago" }
+    ]
+  },
+  {
+    id: 10,
+    name: "Meera Deshpande",
+    avatar: "MD",
+    subjects: ["Digital Art", "Graphic Design"],
+    rating: 5.0,
+    reviews: 84,
+    aiMatchScore: 81,
+    verified: true,
+    experience: "3 years",
+    hourlyRate: 650,
+    mode: ["online"],
+    location: "Pune, India",
+    bio: "Professional UI/UX designer and illustrator. Teaching Procreate, Photoshop, and Figma to budding creatives with a focus on portfolio building.",
+    qualifications: ["BFA Applied Arts", "UX Bootcamp Alum"],
+    availability: ["Sat", "Sun"],
+    languages: ["English", "Marathi"],
+    totalStudents: 90,
+    totalSessions: 320,
+    responseTime: "< 4 hours",
+    reviewsList: [
+      { name: "Kavya P.", rating: 5, text: "Got into my dream design school with her portfolio help!", date: "2 weeks ago" }
+    ]
   }
 ];
 

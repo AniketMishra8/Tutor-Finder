@@ -321,9 +321,191 @@
 @media (max-width: 1024px) {
   .dashboard-grid { grid-template-columns: 1fr; }
   .quick-stats { grid-template-columns: repeat(2, 1fr); }
+  .student-table-header, .student-table-row { font-size: 0.75rem; }
 }
 
 @media (max-width: 768px) {
   .quick-stats { grid-template-columns: 1fr; }
   .badges-grid { grid-template-columns: repeat(3, 1fr); }
+  .student-table-header { display: none; }
+  .student-table-row { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ===== TEACHER DASHBOARD SPECIFICS ===== */
+
+.teacher-hero { border-bottom-color: rgba(16,185,129,0.2); }
+.teacher-avatar { box-shadow: 0 0 0 3px rgba(16,185,129,0.3); }
+
+.student-count-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #34d399;
+  background: rgba(16,185,129,0.12);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.student-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.student-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr;
+  gap: 12px;
+  padding: 10px 16px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.student-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr;
+  gap: 12px;
+  padding: 14px 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition-fast);
+}
+
+.student-table-row:last-child { border-bottom: none; }
+.student-table-row:hover { background: var(--bg-tertiary); }
+
+.student-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.student-name-text {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-email-text {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.student-cell {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.student-cell-muted { color: var(--text-muted); font-size: 0.78rem; }
+
+.mini-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 50px;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.mini-progress-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 32px;
+  text-align: right;
+}
+
+.status-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.status-active {
+  color: #34d399;
+  background: rgba(16,185,129,0.12);
+}
+
+.status-inactive {
+  color: #fbbf24;
+  background: rgba(245,158,11,0.12);
+}
+
+/* Teacher Quick Actions */
+.teacher-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+  transform: translateX(4px);
+}
+
+/* ===== PARENT DASHBOARD SPECIFICS ===== */
+
+.parent-hero { border-bottom-color: rgba(245,158,11,0.2); }
+.parent-avatar { box-shadow: 0 0 0 3px rgba(245,158,11,0.3); }
+
+.parent-child-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.parent-child-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.parent-child-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.parent-child-detail {
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }

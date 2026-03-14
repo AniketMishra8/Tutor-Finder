@@ -10,6 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -17,15 +18,18 @@ export default function Login() {
     }
   }, [user, navigate]);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     
     try {
-      login(email, password);
+      await login(email, password);
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,19 +79,19 @@ export default function Login() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary login-submit-btn">
-                Log In
+              <button type="submit" className="btn btn-primary login-submit-btn" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'Log In'}
               </button>
             </form>
 
-            <div className="login-divider"><span>OR</span></div>
+            <div className="login-divider"><span>OR TRY A DEMO</span></div>
 
             <div className="demo-accounts">
-              <p>Demo Accounts:</p>
+              <p>Quick login with a demo account:</p>
               <div className="demo-buttons">
-                <button type="button" onClick={() => autofill('student')} className="btn btn-outline btn-sm">Student</button>
-                <button type="button" onClick={() => autofill('teacher')} className="btn btn-outline btn-sm">Teacher</button>
-                <button type="button" onClick={() => autofill('parent')} className="btn btn-outline btn-sm">Parent</button>
+                <button type="button" onClick={() => autofill('student')} className="btn btn-outline btn-sm">🎓 Student</button>
+                <button type="button" onClick={() => autofill('teacher')} className="btn btn-outline btn-sm">📚 Teacher</button>
+                <button type="button" onClick={() => autofill('parent')} className="btn btn-outline btn-sm">👨‍👩‍👧 Parent</button>
               </div>
             </div>
             
