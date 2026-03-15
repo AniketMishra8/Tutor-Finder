@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className="container hero-content">
           <div className="hero-badge animate-fade-in-up">
-            <HiOutlineSparkles /> UHack 4.0 — Smart Education
+            <HiOutlineSparkles /> Smart Education Platform For Learning
           </div>
           <h1 className="hero-title animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             AI-Powered<br />

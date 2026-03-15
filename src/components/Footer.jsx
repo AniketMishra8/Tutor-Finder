@@ -23,9 +23,9 @@ export default function Footer() {
               AI-Powered Hybrid Tutor Finder Platform. Connecting students with the best tutors through intelligent matching.
             </p>
             <div className="footer-socials">
-              <a href="#" className="social-icon" aria-label="GitHub"><FaGithub /></a>
-              <a href="#" className="social-icon" aria-label="LinkedIn"><FaLinkedin /></a>
-              <a href="#" className="social-icon" aria-label="Twitter"><FaTwitter /></a>
+              <a href="https://github.com/AniketMishra8" className="social-icon" aria-label="GitHub"><FaGithub /></a>
+              <a href="www.linkedin.com/in/aniket-mishra---" className="social-icon" aria-label="LinkedIn"><FaLinkedin /></a>
+              <a href="https://x.com/AniketM44094489" className="social-icon" aria-label="Twitter"><FaTwitter /></a>
             </div>
           </div>
 
@@ -54,7 +54,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© 2026 DeepThink Labs. Built for <span className="uhack-badge">UHack 4.0</span></p>
+          <p>© 2026 DeepThink Labs. Built for <span className="uhack-badge">Learning</span></p>
           <p className="footer-tagline">Smart Education • AI Matching • Blockchain Verified</p>
         </div>
       </div>
