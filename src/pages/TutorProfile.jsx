@@ -16,8 +16,8 @@ export default function TutorProfile() {
   return (
     <div className="tutor-profile-page page-enter">
       <div className="profile-hero">
-        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', left: '-5%', background: 'rgba(139,92,246,0.12)' }} />
-        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-15%', right: '10%', background: 'rgba(6,182,212,0.08)', animationDelay: '-8s' }} />
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', left: '-5%', background: 'rgba(253, 115, 51, 0.12)' }} />
+        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-15%', right: '10%', background: 'rgba(230, 90, 27, 0.08)', animationDelay: '-8s' }} />
 
         <div className="container">
           <Link to="/find-tutor" className="back-link">
@@ -26,7 +26,9 @@ export default function TutorProfile() {
 
           <div className="profile-header">
             <div className="profile-left">
-              <div className="avatar avatar-xl">{tutor.avatar}</div>
+              <div className="avatar avatar-xl">
+                {tutor.avatar.startsWith('http') ? <img src={tutor.avatar} alt={tutor.name} /> : tutor.avatar}
+              </div>
               <div className="profile-info">
                 <div className="profile-name-row">
                   <h1 className="profile-name">{tutor.name}</h1>

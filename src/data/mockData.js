@@ -2,7 +2,7 @@ export const tutors = [
   {
     id: 1,
     name: "Dr. Priya Sharma",
-    avatar: "PS",
+    avatar: "https://i.pravatar.cc/150?u=priya",
     subjects: ["Mathematics", "Physics"],
     rating: 4.9,
     reviews: 234,
@@ -28,7 +28,7 @@ export const tutors = [
   {
     id: 2,
     name: "Arjun Mehta",
-    avatar: "AM",
+    avatar: "https://i.pravatar.cc/150?u=arjun",
     subjects: ["Computer Science", "AI/ML"],
     rating: 4.8,
     reviews: 189,
@@ -54,7 +54,7 @@ export const tutors = [
   {
     id: 3,
     name: "Ananya Iyer",
-    avatar: "AI",
+    avatar: "https://i.pravatar.cc/150?u=ananya",
     subjects: ["English", "Creative Writing"],
     rating: 4.7,
     reviews: 156,
@@ -80,7 +80,7 @@ export const tutors = [
   {
     id: 4,
     name: "Vikram Rathore",
-    avatar: "VR",
+    avatar: "https://i.pravatar.cc/150?u=vikram",
     subjects: ["Chemistry", "Biology"],
     rating: 4.6,
     reviews: 142,
@@ -106,7 +106,7 @@ export const tutors = [
   {
     id: 5,
     name: "Sneha Kapoor",
-    avatar: "SK",
+    avatar: "https://i.pravatar.cc/150?u=sneha",
     subjects: ["Music", "Piano"],
     rating: 4.9,
     reviews: 98,
@@ -132,7 +132,7 @@ export const tutors = [
   {
     id: 6,
     name: "Rajesh Kumar",
-    avatar: "RK",
+    avatar: "https://i.pravatar.cc/150?u=rajesh",
     subjects: ["Economics", "Business Studies"],
     rating: 4.5,
     reviews: 167,
@@ -158,7 +158,7 @@ export const tutors = [
   {
     id: 7,
     name: "Dr. Sarah Chen",
-    avatar: "SC",
+    avatar: "https://i.pravatar.cc/150?u=sarah",
     subjects: ["History", "Political Science"],
     rating: 4.8,
     reviews: 112,
@@ -182,7 +182,7 @@ export const tutors = [
   {
     id: 8,
     name: "Emilio Romano",
-    avatar: "ER",
+    avatar: "https://i.pravatar.cc/150?u=emilio",
     subjects: ["Spanish", "French"],
     rating: 4.9,
     reviews: 305,
@@ -206,7 +206,7 @@ export const tutors = [
   {
     id: 9,
     name: "Neha Gupta",
-    avatar: "NG",
+    avatar: "https://i.pravatar.cc/150?u=neha",
     subjects: ["SAT Prep", "GRE Prep"],
     rating: 4.7,
     reviews: 210,
@@ -230,7 +230,7 @@ export const tutors = [
   {
     id: 10,
     name: "Meera Deshpande",
-    avatar: "MD",
+    avatar: "https://i.pravatar.cc/150?u=meera",
     subjects: ["Digital Art", "Graphic Design"],
     rating: 5.0,
     reviews: 84,
@@ -256,7 +256,7 @@ export const tutors = [
 export const dashboardData = {
   student: {
     name: "Alex Johnson",
-    avatar: "AJ",
+    avatar: "https://i.pravatar.cc/150?u=alex",
     grade: "Class 12",
     streak: 14,
     totalHours: 156,
@@ -295,15 +295,13 @@ export const dashboardData = {
   ],
   upcomingSessions: [
     { tutor: "Dr. Priya Sharma", subject: "Calculus", date: "Mar 15, 2026", time: "4:00 PM", mode: "online" },
-    { tutor: "Arjun Mehta", subject: "Neural Networks", date: "Mar 17, 2026", time: "6:00 PM", mode: "online" },
-    { tutor: "Ananya Iyer", subject: "Essay Writing", date: "Mar 19, 2026", time: "3:00 PM", mode: "offline" }
   ],
   subjectDistribution: [
-    { name: "Mathematics", value: 35, color: "#8b5cf6" },
-    { name: "Computer Science", value: 25, color: "#06b6d4" },
-    { name: "English", value: 20, color: "#f59e0b" },
-    { name: "Physics", value: 15, color: "#10b981" },
-    { name: "Others", value: 5, color: "#ef4444" }
+    { name: "Mathematics", value: 35, color: "#FD7333" },
+    { name: "Computer Science", value: 25, color: "#E65A1B" },
+    { name: "English", value: 20, color: "#FF8D54" },
+    { name: "Physics", value: 15, color: "rgba(253, 115, 51, 0.6)" },
+    { name: "Others", value: 5, color: "rgba(253, 115, 51, 0.4)" }
   ]
 };
 
@@ -321,37 +319,37 @@ export const features = [
     icon: "🤖",
     title: "AI Smart Matching",
     description: "Our AI analyzes learning style, goals, location, and preferences to find your perfect tutor match with 95%+ accuracy.",
-    gradient: "linear-gradient(135deg, #8b5cf6, #6366f1)"
+    gradient: "linear-gradient(135deg, var(--primary-500), var(--primary-400))"
   },
   {
     icon: "🔗",
     title: "Blockchain Verified",
     description: "Every tutor's credentials are verified on blockchain, ensuring 100% authentic qualifications and building unshakable trust.",
-    gradient: "linear-gradient(135deg, #06b6d4, #0891b2)"
+    gradient: "linear-gradient(135deg, rgba(253, 115, 51, 0.8), rgba(253, 115, 51, 0.6))"
   },
   {
     icon: "🔄",
     title: "Hybrid Learning",
     description: "Seamlessly switch between online and offline sessions. Learn from home or meet face-to-face — the choice is always yours.",
-    gradient: "linear-gradient(135deg, #f59e0b, #d97706)"
+    gradient: "linear-gradient(135deg, var(--primary-600), var(--primary-500))"
   },
   {
     icon: "📊",
     title: "Real-time Analytics",
     description: "Track progress with AI-powered dashboards. Identify learning gaps, monitor improvement, and get data-driven insights.",
-    gradient: "linear-gradient(135deg, #10b981, #059669)"
+    gradient: "linear-gradient(135deg, #FD7333, #E65A1B)"
   },
   {
     icon: "🎮",
     title: "Gamified Learning",
     description: "Earn badges, maintain streaks, climb leaderboards, and stay motivated with our engaging gamification system.",
-    gradient: "linear-gradient(135deg, #ef4444, #dc2626)"
+    gradient: "linear-gradient(135deg, #FF8D54, #FD7333)"
   },
   {
     icon: "🚨",
     title: "Emergency Doubt Clearing",
     description: "Stuck on a problem? Get instant help from available tutors with our real-time emergency doubt clearing feature.",
-    gradient: "linear-gradient(135deg, #ec4899, #db2777)"
+    gradient: "linear-gradient(135deg, #E65A1B, #FF8D54)"
   }
 ];
 

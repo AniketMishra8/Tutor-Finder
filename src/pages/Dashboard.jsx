@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
-import { HiOutlineAcademicCap, HiOutlineClock, HiOutlineFire, HiOutlineTrendingUp, HiOutlineStar, HiOutlineUsers, HiOutlineCalendar, HiOutlineBookOpen } from 'react-icons/hi';
+import { HiOutlineAcademicCap, HiOutlineClock, HiOutlineFire, HiOutlineTrendingUp, HiOutlineStar, HiOutlineUsers, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineSearch } from 'react-icons/hi';
 import { FaVideo, FaMapMarkerAlt, FaTrophy, FaMedal, FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa';
 import { dashboardData, tutors } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
@@ -14,12 +14,12 @@ const teacherData = {
   totalHours: 312,
   avgRating: 4.8,
   students: [
-    { name: 'Alex Johnson', email: 'alex@student.com', subject: 'Mathematics', progress: 92, lastSession: 'Mar 12, 2026', avatar: 'AJ', status: 'active' },
-    { name: 'Test Student', email: 'teststudent@school.com', subject: 'Physics', progress: 78, lastSession: 'Mar 11, 2026', avatar: 'TS', status: 'active' },
-    { name: 'Rahul Kumar', email: 'rahul@student.com', subject: 'Mathematics', progress: 85, lastSession: 'Mar 10, 2026', avatar: 'RK', status: 'active' },
-    { name: 'Sneha Mishra', email: 'sneha@student.com', subject: 'Physics', progress: 71, lastSession: 'Mar 9, 2026', avatar: 'SM', status: 'inactive' },
-    { name: 'Kiran Shah', email: 'kiran@student.com', subject: 'Mathematics', progress: 88, lastSession: 'Mar 8, 2026', avatar: 'KS', status: 'active' },
-    { name: 'Pooja Rao',  email: 'pooja@student.com',  subject: 'Calculus',    progress: 95, lastSession: 'Mar 7, 2026', avatar: 'PR', status: 'active' },
+    { name: 'Alex Johnson', email: 'alex@student.com', subject: 'Mathematics', progress: 92, lastSession: 'Mar 12, 2026', avatar: 'https://i.pravatar.cc/150?u=alex', status: 'active' },
+    { name: 'Test Student', email: 'teststudent@school.com', subject: 'Physics', progress: 78, lastSession: 'Mar 11, 2026', avatar: 'https://i.pravatar.cc/150?u=test1', status: 'active' },
+    { name: 'Rahul Kumar', email: 'rahul@student.com', subject: 'Mathematics', progress: 85, lastSession: 'Mar 10, 2026', avatar: 'https://i.pravatar.cc/150?u=rahul2', status: 'active' },
+    { name: 'Sneha Mishra', email: 'sneha@student.com', subject: 'Physics', progress: 71, lastSession: 'Mar 9, 2026', avatar: 'https://i.pravatar.cc/150?u=sneha3', status: 'inactive' },
+    { name: 'Kiran Shah', email: 'kiran@student.com', subject: 'Mathematics', progress: 88, lastSession: 'Mar 8, 2026', avatar: 'https://i.pravatar.cc/150?u=kiran', status: 'active' },
+    { name: 'Pooja Rao',  email: 'pooja@student.com',  subject: 'Calculus',    progress: 95, lastSession: 'Mar 7, 2026', avatar: 'https://i.pravatar.cc/150?u=pooja', status: 'active' },
   ],
   upcomingSessions: [
     { student: 'Alex Johnson', subject: 'Calculus', date: 'Mar 15, 2026', time: '4:00 PM', mode: 'online' },
@@ -66,7 +66,7 @@ function StudentDashboard({ user, getInitials }) {
   return (
     <div className="dashboard-page page-enter">
       <div className="dashboard-hero">
-        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', right: '-5%', background: 'rgba(139,92,246,0.1)' }} />
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', right: '-5%', background: 'rgba(253, 115, 51, 0.1)' }} />
         <div className="container">
           <div className="dashboard-welcome">
             <div className="avatar avatar-lg">{getInitials()}</div>
@@ -81,7 +81,7 @@ function StudentDashboard({ user, getInitials }) {
       <div className="container dashboard-content">
         <div className="quick-stats">
           <div className="stat-card glass-card">
-            <div className="stat-icon" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa' }}><HiOutlineClock /></div>
+            <div className="stat-icon" style={{ background: 'rgba(253, 115, 51, 0.12)', color: 'var(--primary-500)' }}><HiOutlineClock /></div>
             <div><span className="stat-value">{student.totalHours}</span><span className="stat-label">Hours Learned</span></div>
           </div>
           <div className="stat-card glass-card">
@@ -115,10 +115,10 @@ function StudentDashboard({ user, getInitials }) {
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                       <XAxis dataKey="month" stroke="#71717a" fontSize={12} />
                       <YAxis stroke="#71717a" fontSize={12} />
-                      <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '12px', color: '#f4f4f5' }} />
-                      <Line type="monotone" dataKey="math" stroke="#8b5cf6" strokeWidth={3} dot={{ fill: '#8b5cf6', r: 4 }} name="Mathematics" />
-                      <Line type="monotone" dataKey="science" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 4 }} name="Science" />
-                      <Line type="monotone" dataKey="english" stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', r: 4 }} name="English" />
+                      <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(253, 115, 51, 0.3)', borderRadius: '12px', color: '#f4f4f5' }} />
+                      <Line type="monotone" dataKey="math" stroke="#FD7333" strokeWidth={3} dot={{ fill: '#FD7333', r: 4 }} name="Mathematics" />
+                      <Line type="monotone" dataKey="science" stroke="#E65A1B" strokeWidth={3} dot={{ fill: '#E65A1B', r: 4 }} name="Science" />
+                      <Line type="monotone" dataKey="english" stroke="#FF8D54" strokeWidth={3} dot={{ fill: '#FF8D54', r: 4 }} name="English" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -142,7 +142,7 @@ function StudentDashboard({ user, getInitials }) {
                   <div key={i} className="skill-item">
                     <div className="skill-info"><span className="skill-name">{skill.skill}</span><span className="skill-score">{skill.score}%</span></div>
                     <div className="progress-bar">
-                      <div className="progress-bar-fill" style={{ width: `${skill.score}%`, background: skill.score >= 90 ? 'linear-gradient(90deg, #10b981, #34d399)' : skill.score >= 80 ? 'linear-gradient(90deg, #8b5cf6, #a78bfa)' : 'linear-gradient(90deg, #f59e0b, #fbbf24)', animationDelay: `${i * 0.15}s` }} />
+                      <div className="progress-bar-fill" style={{ width: `${skill.score}%`, background: skill.score >= 90 ? 'linear-gradient(90deg, #10b981, #34d399)' : skill.score >= 80 ? 'linear-gradient(90deg, #FD7333, #FF8D54)' : 'linear-gradient(90deg, #f59e0b, #fbbf24)', animationDelay: `${i * 0.15}s` }} />
                     </div>
                   </div>
                 ))}
@@ -187,7 +187,9 @@ function StudentDashboard({ user, getInitials }) {
               <div className="suggested-list">
                 {suggestedTutors.map(t => (
                   <Link to={`/tutor/${t.id}`} key={t.id} className="suggested-item">
-                    <div className="avatar">{t.avatar}</div>
+                    <div className="avatar">
+                      {t.avatar.startsWith('http') ? <img src={t.avatar} alt={t.name} /> : t.avatar}
+                    </div>
                     <div className="suggested-info"><span className="suggested-name">{t.name}</span><span className="suggested-subject">{t.subjects[0]}</span></div>
                     <span className="suggested-match">{t.aiMatchScore}%</span>
                   </Link>
@@ -208,7 +210,7 @@ function TeacherDashboard({ user, getInitials }) {
   return (
     <div className="dashboard-page page-enter">
       <div className="dashboard-hero teacher-hero">
-        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', right: '-5%', background: 'rgba(16,185,129,0.1)' }} />
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', right: '-5%', background: 'rgba(253, 115, 51, 0.1)' }} />
         <div className="container">
           <div className="dashboard-welcome">
             <div className="avatar avatar-lg teacher-avatar">{getInitials()}</div>
@@ -228,7 +230,7 @@ function TeacherDashboard({ user, getInitials }) {
             <div><span className="stat-value">{teacherData.totalStudents}</span><span className="stat-label">Active Students</span></div>
           </div>
           <div className="stat-card glass-card">
-            <div className="stat-icon" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa' }}><HiOutlineCalendar /></div>
+            <div className="stat-icon" style={{ background: 'rgba(253, 115, 51, 0.12)', color: 'var(--primary-500)' }}><HiOutlineCalendar /></div>
             <div><span className="stat-value">{teacherData.totalSessions}</span><span className="stat-label">Total Sessions</span></div>
           </div>
           <div className="stat-card glass-card">
@@ -260,7 +262,9 @@ function TeacherDashboard({ user, getInitials }) {
                 {teacherData.students.map((s, i) => (
                   <div key={i} className="student-table-row">
                     <div className="student-cell-name">
-                      <div className="avatar avatar-sm">{s.avatar}</div>
+                      <div className="avatar avatar-sm">
+                        {s.avatar.startsWith('http') ? <img src={s.avatar} alt={s.name} /> : s.avatar}
+                      </div>
                       <div>
                         <span className="student-name-text">{s.name}</span>
                         <span className="student-email-text">{s.email}</span>
@@ -296,16 +300,16 @@ function TeacherDashboard({ user, getInitials }) {
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                       <XAxis dataKey="day" stroke="#71717a" fontSize={12} />
                       <YAxis stroke="#71717a" fontSize={12} />
-                      <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px', color: '#f4f4f5' }} />
-                      <Bar dataKey="hours" fill="#10b981" radius={[6, 6, 0, 0]} name="Hours" />
+                      <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(253, 115, 51, 0.3)', borderRadius: '12px', color: '#f4f4f5' }} />
+                      <Bar dataKey="hours" fill="#FD7333" radius={[6, 6, 0, 0]} name="Hours" />
                     </BarChart>
                   ) : (
                     <LineChart data={teacherData.earnings}>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                       <XAxis dataKey="month" stroke="#71717a" fontSize={12} />
                       <YAxis stroke="#71717a" fontSize={12} />
-                      <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '12px', color: '#f4f4f5' }} formatter={(v) => `₹${v.toLocaleString()}`} />
-                      <Line type="monotone" dataKey="amount" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 5 }} name="Earnings" />
+                      <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(253, 115, 51, 0.3)', borderRadius: '12px', color: '#f4f4f5' }} formatter={(v) => `₹${v.toLocaleString()}`} />
+                      <Line type="monotone" dataKey="amount" stroke="#FD7333" strokeWidth={3} dot={{ fill: '#FD7333', r: 5 }} name="Earnings" />
                     </LineChart>
                   )}
                 </ResponsiveContainer>
@@ -328,14 +332,6 @@ function TeacherDashboard({ user, getInitials }) {
                     <span className={`mode-tag mode-${session.mode}`}>{session.mode === 'online' ? <FaVideo /> : <FaMapMarkerAlt />} {session.mode}</span>
                   </div>
                 ))}
-              </div>
-            </div>
-            <div className="sidebar-card glass-card">
-              <h3 className="sidebar-title"><FaChalkboardTeacher /> Quick Actions</h3>
-              <div className="teacher-actions">
-                <button className="action-btn glass-card"><HiOutlineCalendar /> Schedule Session</button>
-                <button className="action-btn glass-card"><HiOutlineBookOpen /> Create Assignment</button>
-                <button className="action-btn glass-card"><HiOutlineUsers /> Add Student</button>
               </div>
             </div>
             <div className="sidebar-card glass-card">
@@ -394,7 +390,7 @@ function ParentDashboard({ user, getInitials }) {
             <div><span className="stat-value">{student.coursesCompleted}</span><span className="stat-label">Courses Completed</span></div>
           </div>
           <div className="stat-card glass-card">
-            <div className="stat-icon" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa' }}><HiOutlineFire /></div>
+            <div className="stat-icon" style={{ background: 'rgba(253, 115, 51, 0.12)', color: 'var(--primary-500)' }}><HiOutlineFire /></div>
             <div><span className="stat-value">{student.streak}</span><span className="stat-label">Day Streak</span></div>
           </div>
           <div className="stat-card glass-card">
@@ -416,10 +412,10 @@ function ParentDashboard({ user, getInitials }) {
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                     <XAxis dataKey="month" stroke="#71717a" fontSize={12} />
                     <YAxis stroke="#71717a" fontSize={12} />
-                    <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '12px', color: '#f4f4f5' }} />
-                    <Line type="monotone" dataKey="math" stroke="#8b5cf6" strokeWidth={3} dot={{ fill: '#8b5cf6', r: 4 }} name="Mathematics" />
-                    <Line type="monotone" dataKey="science" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 4 }} name="Science" />
-                    <Line type="monotone" dataKey="english" stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', r: 4 }} name="English" />
+                    <Tooltip contentStyle={{ background: 'rgba(26,26,36,0.95)', border: '1px solid rgba(253, 115, 51, 0.3)', borderRadius: '12px', color: '#f4f4f5' }} />
+                    <Line type="monotone" dataKey="math" stroke="#FD7333" strokeWidth={3} dot={{ fill: '#FD7333', r: 4 }} name="Mathematics" />
+                    <Line type="monotone" dataKey="science" stroke="#E65A1B" strokeWidth={3} dot={{ fill: '#E65A1B', r: 4 }} name="Science" />
+                    <Line type="monotone" dataKey="english" stroke="#FF8D54" strokeWidth={3} dot={{ fill: '#FF8D54', r: 4 }} name="English" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -446,7 +442,9 @@ function ParentDashboard({ user, getInitials }) {
             <div className="sidebar-card glass-card">
               <h3 className="sidebar-title">👤 Child's Profile</h3>
               <div className="parent-child-card">
-                <div className="avatar avatar-lg">{student.avatar}</div>
+                <div className="avatar avatar-lg">
+                  {student.avatar.startsWith('http') ? <img src={student.avatar} alt="Student" /> : student.avatar}
+                </div>
                 <div className="parent-child-info">
                   <span className="parent-child-name">{childName}</span>
                   <span className="parent-child-detail">{student.grade}</span>

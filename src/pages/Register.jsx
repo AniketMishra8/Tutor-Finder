@@ -49,8 +49,8 @@ export default function Register() {
   return (
     <div className="login-page page-enter">
       <div className="login-hero">
-        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', left: '-5%', background: 'rgba(139,92,246,0.1)' }} />
-        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-10%', right: '-5%', background: 'rgba(6,182,212,0.08)', animationDelay: '-7s' }} />
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', left: '-5%', background: 'rgba(253, 115, 51, 0.1)' }} />
+        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-10%', right: '-5%', background: 'rgba(230, 90, 27, 0.08)', animationDelay: '-7s' }} />
         
         <div className="container login-container">
           <div className="login-card glass-card">

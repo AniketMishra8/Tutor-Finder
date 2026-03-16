@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { HiOutlineSearch, HiOutlineSparkles, HiOutlineShieldCheck, HiOutlineChartBar } from 'react-icons/hi';
 import { FaRobot, FaChalkboardTeacher, FaUserGraduate, FaGlobeAsia } from 'react-icons/fa';
 import { features, stats } from '../data/mockData';
+import Feedback from '../components/Feedback';
+import Footer from '../components/Footer';
 import './Home.css';
 
 function AnimatedCounter({ end, duration = 2000, suffix = '' }) {
@@ -44,35 +46,43 @@ export default function Home() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-bg">
-          <div className="bg-orb" style={{ width: 500, height: 500, top: '-10%', left: '-5%', background: 'rgba(139,92,246,0.15)' }} />
-          <div className="bg-orb" style={{ width: 400, height: 400, bottom: '-10%', right: '-5%', background: 'rgba(6,182,212,0.12)', animationDelay: '-7s' }} />
-          <div className="bg-orb" style={{ width: 300, height: 300, top: '40%', left: '50%', background: 'rgba(236,72,153,0.08)', animationDelay: '-13s' }} />
+          <div className="bg-orb" style={{ width: 500, height: 500, top: '-10%', left: '-5%', background: 'rgba(253, 115, 51, 0.15)' }} />
+          <div className="bg-orb" style={{ width: 400, height: 400, bottom: '-10%', right: '-5%', background: 'rgba(253, 115, 51, 0.08)', animationDelay: '-7s' }} />
+          <div className="bg-orb" style={{ width: 300, height: 300, top: '40%', left: '50%', background: 'rgba(230, 90, 27, 0.08)', animationDelay: '-13s' }} />
           <div className="hero-grid-lines" />
         </div>
 
-        <div className="container hero-content">
-          <div className="hero-badge animate-fade-in-up">
-            <HiOutlineSparkles /> Smart Education Platform For Learning
-          </div>
-          <h1 className="hero-title animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            AI-Powered<br />
-            <span className="hero-gradient">Hybrid Tutor</span><br />
-            Finder Platform
-          </h1>
-          <p className="hero-desc animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            Connect with verified tutors matched by AI to your learning style,
-            goals, and location. Online or offline — the future of education is hybrid.
-          </p>
-          <div className="hero-actions animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <Link to="/find-tutor" className="btn btn-primary btn-lg">
-              <HiOutlineSearch /> Find Your Tutor
-            </Link>
-            <Link to="/about" className="btn btn-secondary btn-lg">
-              Learn More
-            </Link>
+        <div className="container">
+          <div className="hero-content">
+            <div className="hero-text-col">
+              <div className="hero-badge animate-fade-in-up">
+                <HiOutlineSparkles /> Smart Education Platform For Learning
+              </div>
+              <h1 className="hero-title animate-fade-in-up animate-delay-1">
+                AI-Powered<br />
+                <span className="hero-gradient">Hybrid Tutor</span><br />
+                Finder Platform
+              </h1>
+              <p className="hero-desc animate-fade-in-up animate-delay-2">
+                Connect with verified tutors matched by AI to your learning style,
+                goals, and location. Online or offline — the future of education is hybrid.
+              </p>
+              <div className="hero-actions animate-fade-in-up animate-delay-3">
+                <Link to="/find-tutor" className="btn btn-primary btn-lg">
+                  <HiOutlineSearch /> Find Your Tutor
+                </Link>
+                <Link to="/about" className="btn btn-secondary btn-lg">
+                  Learn More
+                </Link>
+              </div>
+            </div>
+
+            <div className="hero-image-col animate-fade-in-up animate-delay-3">
+              <img src="/hero_illustration.png" alt="Miyagi Education Hero" className="hero-illustration" />
+            </div>
           </div>
 
-          <div className="hero-stats animate-fade-in-up" style={{ animationDelay: '0.45s' }}>
+          <div className="hero-stats animate-fade-in-up animate-delay-4">
             <div className="hero-stat">
               <span className="hero-stat-icon"><FaChalkboardTeacher /></span>
               <div>
@@ -155,8 +165,8 @@ export default function Home() {
         <div className="container">
           <div className="cta-card glass-card">
             <div className="cta-bg">
-              <div className="bg-orb" style={{ width: 300, height: 300, top: '-20%', right: '-5%', background: 'rgba(139,92,246,0.2)' }} />
-              <div className="bg-orb" style={{ width: 200, height: 200, bottom: '-15%', left: '10%', background: 'rgba(6,182,212,0.15)', animationDelay: '-5s' }} />
+              <div className="bg-orb" style={{ width: 300, height: 300, top: '-20%', right: '-5%', background: 'rgba(253, 115, 51, 0.15)' }} />
+              <div className="bg-orb" style={{ width: 200, height: 200, bottom: '-15%', left: '10%', background: 'rgba(230, 90, 27, 0.1)', animationDelay: '-5s' }} />
             </div>
             <h2 className="cta-title">Ready to Transform Your Learning?</h2>
             <p className="cta-desc">Join thousands of students who found their perfect tutor through AI-powered matching.</p>
@@ -166,6 +176,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Feedback Section */}
+      <Feedback />
+
+      {/* Footer Section */}
+      <Footer />
     </div>
   );
 }

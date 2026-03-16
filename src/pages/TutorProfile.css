@@ -1,9 +1,5 @@
 /* ===== TUTOR PROFILE PAGE ===== */
 
-.tutor-profile-page {
-  padding-top: var(--nav-height);
-}
-
 .profile-hero {
   position: relative;
   padding: 48px 0;

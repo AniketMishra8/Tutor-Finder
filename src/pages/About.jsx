@@ -10,12 +10,12 @@ export default function About() {
     <div className="about-page page-enter">
       {/* Hero */}
       <section className="about-hero">
-        <div className="bg-orb" style={{ width: 400, height: 400, top: '-15%', left: '10%', background: 'rgba(139,92,246,0.1)' }} />
-        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-10%', right: '5%', background: 'rgba(6,182,212,0.08)', animationDelay: '-8s' }} />
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-15%', left: '10%', background: 'rgba(253, 115, 51, 0.1)' }} />
+        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-10%', right: '5%', background: 'rgba(230, 90, 27, 0.08)', animationDelay: '-8s' }} />
 
         <div className="container about-hero-content">
           <div className="hero-badge animate-fade-in-up">
-            🏆 UHack 4.0 — Team UHK04223
+            🚀 Revolutionizing Hybrid Education
           </div>
           <h1 className="about-title animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             <span className="hero-gradient">DeepThink Labs</span>
@@ -25,9 +25,9 @@ export default function About() {
             blockchain credential verification, and seamless hybrid learning.
           </p>
           <div className="about-meta animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <span className="badge badge-primary">Problem ID: D12-S01</span>
-            <span className="badge badge-cyan">Theme: Smart Education</span>
-            <span className="badge badge-success">Category: Software</span>
+            <span className="badge badge-primary">✨ AI-Powered Matching</span>
+            <span className="badge badge-cyan">🔒 Verified Credentials</span>
+            <span className="badge badge-success">📚 Personalized Learning</span>
           </div>
         </div>
       </section>

@@ -1,15 +1,13 @@
 /* ===== DASHBOARD PAGE ===== */
 
-.dashboard-page {
-  padding-top: var(--nav-height);
-}
-
 .dashboard-hero {
   position: relative;
-  padding: 48px 0 24px;
+  padding: 48px 24px 24px;
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  margin-bottom: 24px;
 }
 
 .dashboard-welcome {
@@ -31,7 +29,7 @@
 }
 
 .dashboard-content {
-  padding: 32px 0 80px;
+  padding: 0 0 80px;
 }
 
 /* Quick stats */
@@ -451,8 +449,8 @@
   background: rgba(245,158,11,0.12);
 }
 
-/* Teacher Quick Actions */
-.teacher-actions {
+/* Quick Actions */
+.quick-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;

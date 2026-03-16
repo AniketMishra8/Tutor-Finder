@@ -27,8 +27,8 @@ export default function FindTutor() {
   return (
     <div className="find-tutor-page page-enter">
       <div className="find-tutor-hero">
-        <div className="bg-orb" style={{ width: 400, height: 400, top: '-15%', right: '-5%', background: 'rgba(139,92,246,0.1)' }} />
-        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-10%', left: '-5%', background: 'rgba(6,182,212,0.08)', animationDelay: '-7s' }} />
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-15%', right: '-5%', background: 'rgba(253, 115, 51, 0.1)' }} />
+        <div className="bg-orb" style={{ width: 300, height: 300, bottom: '-10%', left: '-5%', background: 'rgba(230, 90, 27, 0.08)', animationDelay: '-7s' }} />
 
         <div className="container">
           <h1 className="section-title" style={{ fontSize: '2.2rem' }}>
@@ -89,7 +89,9 @@ export default function FindTutor() {
               style={{ animationDelay: `${i * 0.08}s` }}
             >
               <div className="tutor-card-header">
-                <div className="avatar avatar-lg">{tutor.avatar}</div>
+                <div className="avatar avatar-lg">
+                  {tutor.avatar.startsWith('http') ? <img src={tutor.avatar} alt={tutor.name} /> : tutor.avatar}
+                </div>
                 <div className={`ai-score ${tutor.aiMatchScore >= 90 ? 'ai-score-high' : 'ai-score-mid'}`}>
                   {tutor.aiMatchScore}
                 </div>
