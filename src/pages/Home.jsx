@@ -40,6 +40,74 @@ function AnimatedCounter({ end, duration = 2000, suffix = '' }) {
   );
 }
 
+/* ---- Typewriter: reveals text character-by-character ---- */
+function TypewriterText({ text, speed = 40, delay = 0, className = '', tag: Tag = 'span' }) {
+  const [displayed, setDisplayed] = useState('');
+  const [started, setStarted] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const ref = useRef(null);
+
+  // Only start when the element scrolls into view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setStarted(true); },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!started) return;
+    let i = 0;
+    const timeout = setTimeout(() => {
+      const timer = setInterval(() => {
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i >= text.length) {
+          clearInterval(timer);
+          setIsComplete(true);
+        }
+      }, speed);
+      return () => clearInterval(timer);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [started, text, speed, delay]);
+
+  return (
+    <Tag ref={ref} className={`${className} typewriter-text`}>
+      {displayed}
+      {!isComplete && <span className="typewriter-cursor">|</span>}
+    </Tag>
+  );
+}
+
+/* ---- 3D Flip Card for Features ---- */
+function FlipCard({ feature, index }) {
+  return (
+    <div className="flip-card" style={{ animationDelay: `${index * 0.1}s` }}>
+      <div className="flip-card-inner">
+        {/* Front Face */}
+        <div className="flip-card-front glass-card">
+          <div className="feature-icon" style={{ background: feature.gradient }}>
+            {feature.icon}
+          </div>
+          <h3 className="feature-title">{feature.title}</h3>
+          <p className="flip-hint">Hover to learn more →</p>
+        </div>
+        {/* Back Face */}
+        <div className="flip-card-back glass-card" style={{ borderColor: `${feature.gradient ? '' : 'var(--border-accent)'}` }}>
+          <div className="flip-back-icon" style={{ background: feature.gradient }}>
+            {feature.icon}
+          </div>
+          <h3 className="feature-title">{feature.title}</h3>
+          <p className="feature-desc">{feature.description}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="home-page page-enter">
@@ -59,13 +127,18 @@ export default function Home() {
                 <HiOutlineSparkles /> Smart Education Platform For Learning
               </div>
               <h1 className="hero-title animate-fade-in-up animate-delay-1">
-                AI-Powered<br />
-                <span className="hero-gradient">Hybrid Tutor</span><br />
-                Finder Platform
+                <TypewriterText text="AI-Powered" speed={60} delay={400} /><br />
+                <span className="hero-gradient">
+                  <TypewriterText text="Hybrid Tutor" speed={60} delay={1200} />
+                </span><br />
+                <TypewriterText text="Finder Platform" speed={60} delay={2200} />
               </h1>
               <p className="hero-desc animate-fade-in-up animate-delay-2">
-                Connect with verified tutors matched by AI to your learning style,
-                goals, and location. Online or offline — the future of education is hybrid.
+                <TypewriterText
+                  text="Connect with verified tutors matched by AI to your learning style, goals, and location. Online or offline — the future of education is hybrid."
+                  speed={20}
+                  delay={3200}
+                />
               </p>
               <div className="hero-actions animate-fade-in-up animate-delay-3">
                 <Link to="/find-tutor" className="btn btn-primary btn-lg">
@@ -78,7 +151,9 @@ export default function Home() {
             </div>
 
             <div className="hero-image-col animate-fade-in-up animate-delay-3">
-              <img src="/hero_illustration.png" alt="Miyagi Education Hero" className="hero-illustration" />
+              <div className="hero-3d-wrapper">
+                <img src="/hero_illustration.png" alt="DeepThink Hero" className="hero-illustration continuous-3d-float" />
+              </div>
             </div>
           </div>
 
@@ -119,17 +194,7 @@ export default function Home() {
           </div>
           <div className="features-grid">
             {features.map((feature, i) => (
-              <div
-                key={i}
-                className="feature-card glass-card"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="feature-icon" style={{ background: feature.gradient }}>
-                  {feature.icon}
-                </div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-desc">{feature.description}</p>
-              </div>
+              <FlipCard key={i} feature={feature} index={i} />
             ))}
           </div>
         </div>
