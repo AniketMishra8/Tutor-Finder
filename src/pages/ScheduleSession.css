@@ -1,0 +1,218 @@
+/* ====== SCHEDULE SESSION PAGE ====== */
+
+.schedule-page {
+  padding-bottom: 4rem;
+}
+
+.schedule-header {
+  margin-bottom: 2rem;
+}
+
+.schedule-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 0.5rem 0;
+  font-family: inherit;
+}
+
+.schedule-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Container & Card */
+.schedule-container {
+  max-width: 800px;
+  margin: 0;
+}
+
+.schedule-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-color);
+}
+
+/* Form Styles */
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Custom Input Styling */
+.schedule-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
+  appearance: none; /* For selects */
+}
+
+.schedule-input:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 2px rgba(253, 115, 51, 0.1);
+}
+
+.schedule-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Select wrapper for custom arrow */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-muted);
+  pointer-events: none;
+}
+
+.schedule-select {
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+/* Textarea */
+.schedule-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* File Upload Area */
+.schedule-upload {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.schedule-upload:hover {
+  border-color: var(--primary-400);
+  background-color: rgba(253, 115, 51, 0.02);
+}
+
+.upload-icon {
+  font-size: 1.5rem;
+  color: var(--primary-500);
+}
+
+/* Submit Button */
+.schedule-submit-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.schedule-submit-btn {
+  background-color: var(--primary-500);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.schedule-submit-btn:hover {
+  background-color: var(--primary-600);
+  transform: translateY(-1px);
+}
+
+/* Light Theme Adjustments */
+html[data-theme='light'] .schedule-card {
+  background-color: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+html[data-theme='light'] .schedule-input {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+html[data-theme='light'] .schedule-input:focus {
+  background-color: #ffffff;
+  border-color: var(--primary-500);
+}
+
+html[data-theme='light'] .schedule-upload {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+html[data-theme='light'] .schedule-upload:hover {
+  background-color: #fffaf5;
+  border-color: var(--primary-400);
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .schedule-card {
+    padding: 1.5rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .schedule-submit-container {
+    justify-content: stretch;
+  }
+  
+  .schedule-submit-btn {
+    width: 100%;
+  }
+}

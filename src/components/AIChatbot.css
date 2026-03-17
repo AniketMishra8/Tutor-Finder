@@ -1,8 +1,7 @@
-/* AI Chatbot Styles */
 .ai-toggle-btn {
   position: fixed;
   bottom: 32px;
-  right: 32px;
+  right: 16px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -35,9 +34,17 @@
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 /* Sidebar Overlay */
@@ -55,7 +62,9 @@
 }
 
 @keyframes fadeIn {
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 /* AI Sidebar */
@@ -121,7 +130,8 @@
 
 .ai-status {
   font-size: 0.75rem;
-  color: #10b981; /* green */
+  color: #10b981;
+  /* green */
 }
 
 .ai-close-btn {
@@ -294,14 +304,17 @@
 
 @media (max-width: 768px) {
   .ai-toggle-btn {
-    bottom: 80px; /* above mobile nav */
+    bottom: 80px;
+    /* above mobile nav */
     right: 20px;
     width: 48px;
     height: 48px;
   }
+
   .ai-toggle-icon {
     font-size: 1.4rem;
   }
+
   .ai-sidebar {
     max-width: 100%;
   }

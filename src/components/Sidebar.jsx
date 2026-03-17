@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { HiOutlineAcademicCap, HiOutlineHome, HiOutlineSearch, HiOutlineViewGrid, HiOutlineInformationCircle, HiOutlineLogout, HiOutlineLogin, HiOutlineMoon, HiOutlineSun, HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineUsers } from 'react-icons/hi';
-import { FaVideo } from 'react-icons/fa';
+import { FaVideo, FaGamepad } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import './Sidebar.css';
+import AddSutdentModal from './AddStudentModal'
+import AddStudent from '../pages/AddStudent';
+import AddStudentModal from './AddStudentModal';
 
 export default function Sidebar({ isCollapsed, toggleCollapse }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -46,7 +50,8 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
       quickActions = [
         { label: 'Join Session', icon: <FaVideo />, onClick: () => navigate('/schedule-session') },
         { label: 'Find a Tutor', icon: <HiOutlineSearch />, onClick: () => navigate('/find-tutor') },
-        { label: 'Practice Skills', icon: <HiOutlineAcademicCap />, onClick: () => navigate('/assignments') },
+        { label: 'Practice Skills', icon: <HiOutlineAcademicCap />, onClick: () => navigate('/practice-quiz') },
+        { label: 'Game Zone', icon: <FaGamepad />, onClick: () => navigate('/gamified-learning') },
       ];
     } else if (user.role === 'teacher') {
       quickActions = [
@@ -166,6 +171,11 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
           </div>
         </div>
       </nav>
+
+      <AddStudentModal 
+        isOpen = {isAddStudentModalOpen}
+        onClose = {() => setIsAddStudentModalOpen(false)}
+      />
     </>
   );
 }
