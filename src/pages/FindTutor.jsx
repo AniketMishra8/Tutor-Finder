@@ -1,16 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { HiOutlineSearch, HiOutlineLocationMarker, HiOutlineStar, HiOutlineBadgeCheck } from 'react-icons/hi';
 import { FaRobot, FaVideo, FaMapMarkerAlt } from 'react-icons/fa';
-import { tutors } from '../data/mockData';
+import { tutors as mockTutors } from '../data/mockData';
 import './FindTutor.css';
 
 export default function FindTutor() {
   const [search, setSearch] = useState('');
   const [modeFilter, setModeFilter] = useState('all');
   const [sortBy, setSortBy] = useState('match');
+  const [allTutors, setAllTutors] = useState(mockTutors);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filtered = tutors
+  // Fetch real teachers from API and merge with mock data
+  useEffect(() => {
+    async function fetchTeachers() {
+      try {
+        const res = await fetch('/api/teachers');
+        if (res.ok) {
+          const apiTeachers = await res.json();
+          // Merge: API teachers first, then mock tutors (avoiding duplicates by name)
+          const apiNames = new Set(apiTeachers.map(t => t.name.toLowerCase()));
+          const uniqueMock = mockTutors.filter(t => !apiNames.has(t.name.toLowerCase()));
+          setAllTutors([...apiTeachers, ...uniqueMock]);
+        }
+      } catch (err) {
+        console.log('Could not fetch teachers from API, using mock data:', err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchTeachers();
+  }, []);
+
+  const filtered = allTutors
     .filter(t => {
       const matchSearch = !search || t.name.toLowerCase().includes(search.toLowerCase()) ||
         t.subjects.some(s => s.toLowerCase().includes(search.toLowerCase()));
@@ -18,9 +41,9 @@ export default function FindTutor() {
       return matchSearch && matchMode;
     })
     .sort((a, b) => {
-      if (sortBy === 'match') return b.aiMatchScore - a.aiMatchScore;
-      if (sortBy === 'rating') return b.rating - a.rating;
-      if (sortBy === 'price') return a.hourlyRate - b.hourlyRate;
+      if (sortBy === 'match') return (b.aiMatchScore || 0) - (a.aiMatchScore || 0);
+      if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
+      if (sortBy === 'price') return (a.hourlyRate || 0) - (b.hourlyRate || 0);
       return 0;
     });
 
@@ -78,7 +101,9 @@ export default function FindTutor() {
       </div>
 
       <div className="container tutor-results">
-        <p className="results-count">{filtered.length} tutors found</p>
+        <p className="results-count">
+          {isLoading ? 'Loading tutors...' : `${filtered.length} tutors found`}
+        </p>
 
         <div className="tutor-grid">
           {filtered.map((tutor, i) => (
@@ -90,10 +115,10 @@ export default function FindTutor() {
             >
               <div className="tutor-card-header">
                 <div className="avatar avatar-lg">
-                  {tutor.avatar.startsWith('http') ? <img src={tutor.avatar} alt={tutor.name} /> : tutor.avatar}
+                  {tutor.avatar && tutor.avatar.startsWith('http') ? <img src={tutor.avatar} alt={tutor.name} /> : (tutor.name ? tutor.name.charAt(0) : '?')}
                 </div>
-                <div className={`ai-score ${tutor.aiMatchScore >= 90 ? 'ai-score-high' : 'ai-score-mid'}`}>
-                  {tutor.aiMatchScore}
+                <div className={`ai-score ${(tutor.aiMatchScore || 0) >= 90 ? 'ai-score-high' : 'ai-score-mid'}`}>
+                  {tutor.aiMatchScore || '—'}
                 </div>
               </div>
 
@@ -105,6 +130,9 @@ export default function FindTutor() {
                       <HiOutlineBadgeCheck /> Verified
                     </span>
                   )}
+                  {tutor.isFromDB && (
+                    <span className="new-badge">New</span>
+                  )}
                 </div>
 
                 <div className="tutor-subjects">
@@ -115,8 +143,8 @@ export default function FindTutor() {
 
                 <div className="tutor-meta">
                   <span className="tutor-rating">
-                    <HiOutlineStar className="star-icon" /> {tutor.rating}
-                    <span className="review-count">({tutor.reviews})</span>
+                    <HiOutlineStar className="star-icon" /> {tutor.rating || 'New'}
+                    {tutor.reviews > 0 && <span className="review-count">({tutor.reviews})</span>}
                   </span>
                   <span className="tutor-location">
                     <HiOutlineLocationMarker /> {tutor.location}

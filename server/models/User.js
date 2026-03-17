@@ -27,11 +27,70 @@ const userSchema = new mongoose.Schema({
   },
   studentEmail: {
     type: String,
-    // Only required if role is parent
     required: function() { return this.role === 'parent'; },
     trim: true,
     lowercase: true
   },
+
+  // Email Verification
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: {
+    type: String
+  },
+  verificationTokenExpires: {
+    type: Date
+  },
+
+  // Teacher Profile Fields
+  subjects: [{
+    type: String,
+    trim: true
+  }],
+  bio: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  hourlyRate: {
+    type: Number,
+    default: 0
+  },
+  experience: {
+    type: String,
+    default: ''
+  },
+  location: {
+    type: String,
+    default: ''
+  },
+  qualifications: [{
+    type: String,
+    trim: true
+  }],
+  languages: [{
+    type: String,
+    trim: true
+  }],
+  mode: [{
+    type: String,
+    enum: ['online', 'offline']
+  }],
+  availability: [{
+    type: String,
+    enum: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  }],
+  isProfileComplete: {
+    type: Boolean,
+    default: false
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
+
   createdAt: {
     type: Date,
     default: Date.now

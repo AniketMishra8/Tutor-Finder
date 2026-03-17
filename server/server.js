@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
+const teacherRoutes = require('./routes/teacherRoutes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/teachers', teacherRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

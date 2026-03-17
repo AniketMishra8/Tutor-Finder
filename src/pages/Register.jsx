@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './Login.css'; // Reusing Login.css
+import './Login.css';
 
 export default function Register() {
   const { register, user } = useAuth();
@@ -18,7 +18,7 @@ export default function Register() {
     email: '',
     password: '',
     role: 'student',
-    studentEmail: '' // Only used if role === 'parent'
+    studentEmail: ''
   });
   
   const [error, setError] = useState('');
@@ -37,8 +37,13 @@ export default function Register() {
     setIsLoading(true);
     
     try {
-      await register(formData);
-      navigate('/dashboard');
+      const result = await register(formData);
+      if (result.needsVerification) {
+        // Redirect to email verification page
+        navigate('/verify-email', { state: { email: result.email } });
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message);
     } finally {

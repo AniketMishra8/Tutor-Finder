@@ -193,3 +193,79 @@
     padding: 32px 20px;
   }
 }
+
+/* ===== VERIFY EMAIL PAGE ===== */
+
+.verify-icon-wrap {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.otp-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.otp-input {
+  width: 50px;
+  height: 56px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(253, 115, 51, 0.15);
+  background: rgba(253, 115, 51, 0.05);
+}
+
+.login-success {
+  padding: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-md);
+  color: #34d399;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: var(--primary-400);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.resend-btn:hover:not(:disabled) {
+  color: var(--primary-300);
+}
+
+.resend-btn:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

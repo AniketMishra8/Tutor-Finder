@@ -180,6 +180,17 @@
   color: var(--text-muted);
 }
 
+.new-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-500), #E65A1B);
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 @media (max-width: 1024px) {
   .tutor-grid { grid-template-columns: repeat(2, 1fr); }
 }

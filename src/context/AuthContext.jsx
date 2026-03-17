@@ -2,20 +2,16 @@ import { createContext, useState, useEffect, useContext } from 'react';
 
 const AuthContext = createContext();
 
-// Point this to your new Node Express server
-const API_URL = 'http://localhost:5000/api/auth';
+// Uses Vite proxy — see vite.config.js
+const API_URL = '/api/auth';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Instead of loading from localStorage DB, we just check if we have a JWT token
   useEffect(() => {
     const token = localStorage.getItem('tutor_finder_token');
     if (token) {
-      // In a full production app, you would make a GET /api/auth/me request here
-      // to validate the token and get the fresh user profile. 
-      // For this prototype, if they have a user payload saved alongside the token, we load it.
       const savedUser = localStorage.getItem('tutor_finder_user');
       if (savedUser) {
         try {
@@ -38,10 +34,16 @@ export function AuthProvider({ children }) {
     const data = await response.json();
 
     if (!response.ok) {
+      // If user needs verification, throw with special flag
+      if (data.needsVerification) {
+        const err = new Error(data.error);
+        err.needsVerification = true;
+        err.email = data.email;
+        throw err;
+      }
       throw new Error(data.error || 'Failed to login');
     }
 
-    // Save JWT token and basic user info to persist session
     localStorage.setItem('tutor_finder_token', data.token);
     localStorage.setItem('tutor_finder_user', JSON.stringify(data.user));
     setUser(data.user);
@@ -62,12 +64,50 @@ export function AuthProvider({ children }) {
       throw new Error(data.error || 'Failed to register');
     }
 
-    // Auto-login after successful registration
+    // Registration now returns needsVerification instead of auto-login
+    return { needsVerification: true, email: data.email };
+  };
+
+  const verifyEmail = async (email, otp) => {
+    const response = await fetch(`${API_URL}/verify-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Verification failed');
+    }
+
+    // Auto-login after successful verification
     localStorage.setItem('tutor_finder_token', data.token);
     localStorage.setItem('tutor_finder_user', JSON.stringify(data.user));
     setUser(data.user);
 
     return data.user;
+  };
+
+  const resendOtp = async (email) => {
+    const response = await fetch(`${API_URL}/resend-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to resend code');
+    }
+
+    return data.message;
+  };
+
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem('tutor_finder_user', JSON.stringify(updatedUser));
   };
 
   const logout = () => {
@@ -77,7 +117,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, verifyEmail, resendOtp, updateUser, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

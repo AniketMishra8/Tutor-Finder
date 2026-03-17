@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
-import { HiOutlineAcademicCap, HiOutlineClock, HiOutlineFire, HiOutlineTrendingUp, HiOutlineStar, HiOutlineUsers, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineAcademicCap, HiOutlineClock, HiOutlineFire, HiOutlineTrendingUp, HiOutlineStar, HiOutlineUsers, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineSearch, HiOutlinePencilAlt } from 'react-icons/hi';
 import { FaVideo, FaMapMarkerAlt, FaTrophy, FaMedal, FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa';
 import { dashboardData, tutors } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
@@ -52,9 +52,44 @@ export default function Dashboard() {
 
   if (!user) return null;
 
+  // If teacher hasn't completed their profile, show setup prompt
+  if (user.role === 'teacher' && !user.isProfileComplete) {
+    return <TeacherProfilePrompt user={user} getInitials={getInitials} />;
+  }
+
   if (user.role === 'teacher') return <TeacherDashboard user={user} getInitials={getInitials} />;
   if (user.role === 'parent') return <ParentDashboard user={user} getInitials={getInitials} />;
   return <StudentDashboard user={user} getInitials={getInitials} />;
+}
+
+// ====== TEACHER PROFILE PROMPT ======
+function TeacherProfilePrompt({ user, getInitials }) {
+  return (
+    <div className="dashboard-page page-enter">
+      <div className="dashboard-hero teacher-hero">
+        <div className="bg-orb" style={{ width: 400, height: 400, top: '-20%', right: '-5%', background: 'rgba(253, 115, 51, 0.1)' }} />
+        <div className="container">
+          <div className="dashboard-welcome">
+            <div className="avatar avatar-lg teacher-avatar">{getInitials()}</div>
+            <div>
+              <h1 className="dashboard-greeting">Welcome, {user.name}! 📚</h1>
+              <p className="dashboard-subtext">Let's set up your teaching profile to get started.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="container dashboard-content">
+        <div className="profile-prompt-card glass-card">
+          <div className="prompt-icon"><FaChalkboardTeacher /></div>
+          <h2 className="prompt-title">Complete Your Teacher Profile</h2>
+          <p className="prompt-text">Add your subjects, qualifications, and teaching preferences so students can discover and book sessions with you.</p>
+          <Link to="/teacher-profile-setup" className="btn btn-primary btn-lg">
+            <HiOutlinePencilAlt style={{ marginRight: 6 }} /> Set Up My Profile
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ====== STUDENT DASHBOARD ======
