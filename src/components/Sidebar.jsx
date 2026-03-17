@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { HiOutlineAcademicCap, HiOutlineHome, HiOutlineSearch, HiOutlineViewGrid, HiOutlineInformationCircle, HiOutlineLogout, HiOutlineLogin, HiOutlineMoon, HiOutlineSun, HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineUsers } from 'react-icons/hi';
-import { FaVideo, FaGamepad } from 'react-icons/fa';
+import { HiOutlineAcademicCap, HiOutlineHome, HiOutlineSearch, HiOutlineViewGrid, HiOutlineInformationCircle, HiOutlineLogout, HiOutlineLogin, HiOutlineMoon, HiOutlineSun, HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineUsers, HiOutlineLightningBolt } from 'react-icons/hi';
+import { FaVideo, FaGamepad, FaCompass, FaGem } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import './Sidebar.css';
-import AddSutdentModal from './AddStudentModal'
-import AddStudent from '../pages/AddStudent';
 import AddStudentModal from './AddStudentModal';
 
 export default function Sidebar({ isCollapsed, toggleCollapse }) {
@@ -23,47 +21,73 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
     setMobileOpen(false);
   };
 
-  // Determine which links to show based on Role
-  let navigation = [{ to: '/', label: 'Home', icon: <HiOutlineHome /> }];
+  // ====== BUILD GROUPED NAVIGATION ======
+  const navGroups = [];
 
+  // Main group — always shown
+  const mainLinks = [{ to: '/', label: 'Home', icon: <HiOutlineHome /> }];
   if (user) {
-    if (user.role === 'student') {
-      navigation.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
-      navigation.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
-      navigation.push({ to: '/book-recommendations', label: 'Book Picks', icon: <HiOutlineBookOpen /> });
-    } else if (user.role === 'teacher') {
-      navigation.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
-      navigation.push({ to: '/book-recommendations', label: 'Book Picks', icon: <HiOutlineBookOpen /> });
-    } else if (user.role === 'parent') {
-      navigation.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
-      navigation.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
+    mainLinks.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
+    if (user.role === 'student' || user.role === 'parent') {
+      mainLinks.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
     }
   } else {
-    navigation.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
+    mainLinks.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
+  }
+  navGroups.push({ label: null, links: mainLinks });
+
+  // Learning group — students only
+  if (user && user.role === 'student') {
+    navGroups.push({
+      label: 'Learning',
+      links: [
+        { to: '/practice-quiz', label: 'Practice Skills', icon: <HiOutlineAcademicCap /> },
+        { to: '/gamified-learning', label: 'Game Zone', icon: <FaGamepad /> },
+        { to: '/book-recommendations', label: 'Book Picks', icon: <HiOutlineBookOpen /> },
+      ]
+    });
   }
 
-  navigation.push({ to: '/about', label: 'About', icon: <HiOutlineInformationCircle /> });
+  // Teacher — resources
+  if (user && user.role === 'teacher') {
+    navGroups.push({
+      label: 'Resources',
+      links: [
+        { to: '/book-recommendations', label: 'Book Picks', icon: <HiOutlineBookOpen /> },
+      ]
+    });
+  }
 
+  // Explore group — career & rewards for student, career for teacher
+  if (user && (user.role === 'student' || user.role === 'teacher')) {
+    const exploreLinks = [
+      { to: '/career-consultation', label: 'Career Guidance', icon: <FaCompass /> },
+    ];
+    if (user.role === 'student') {
+      exploreLinks.push({ to: '/rewards-store', label: 'Rewards', icon: <FaGem /> });
+    }
+    navGroups.push({ label: 'Explore', links: exploreLinks });
+  }
+
+  // About — always at the end
+  navGroups.push({ label: null, links: [{ to: '/about', label: 'About', icon: <HiOutlineInformationCircle /> }] });
+
+  // ====== QUICK ACTIONS (compact pills) ======
   let quickActions = [];
   if (user) {
     if (user.role === 'student') {
       quickActions = [
         { label: 'Join Session', icon: <FaVideo />, onClick: () => navigate('/schedule-session') },
-        { label: 'Find a Tutor', icon: <HiOutlineSearch />, onClick: () => navigate('/find-tutor') },
-        { label: 'Practice Skills', icon: <HiOutlineAcademicCap />, onClick: () => navigate('/practice-quiz') },
-        { label: 'Game Zone', icon: <FaGamepad />, onClick: () => navigate('/gamified-learning') },
       ];
     } else if (user.role === 'teacher') {
       quickActions = [
-        { label: 'Schedule Session', icon: <HiOutlineCalendar />, onClick: () => navigate('/schedule-session') },
-        { label: 'Manage Assignments', icon: <HiOutlineBookOpen />, onClick: () => navigate('/assignments') },
-        { label: 'Add Student', icon: <HiOutlineUsers />, onClick: () => navigate('/add-student') },
+        { label: 'Schedule', icon: <HiOutlineCalendar />, onClick: () => navigate('/schedule-session') },
+        { label: 'Students', icon: <HiOutlineUsers />, onClick: () => navigate('/add-student') },
       ];
     } else if (user.role === 'parent') {
       quickActions = [
-        { label: 'Schedule Session', icon: <HiOutlineCalendar />, onClick: () => navigate('/schedule-session') },
-        { label: 'View Report Card', icon: <HiOutlineBookOpen />, onClick: () => navigate('/assignments') },
-        { label: 'Message Tutor', icon: <HiOutlineUsers />, onClick: () => navigate('/messages') },
+        { label: 'Schedule', icon: <HiOutlineCalendar />, onClick: () => navigate('/schedule-session') },
+        { label: 'Message', icon: <HiOutlineUsers />, onClick: () => navigate('/messages') },
       ];
     }
   }
@@ -71,8 +95,8 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <button 
-        className="mobile-sidebar-toggle" 
+      <button
+        className="mobile-sidebar-toggle"
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-label="Toggle Navigation"
       >
@@ -101,40 +125,54 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
           </button>
         </div>
 
-        <div className="sidebar-links">
-          {navigation.map(item => (
-            <Link
-              key={item.to + item.label}
-              to={item.to}
-              className={`sidebar-link ${location.pathname === item.to ? 'active' : ''}`}
-              onClick={() => setMobileOpen(false)}
-            >
-              <div className="sidebar-link-icon">{item.icon}</div>
-              <span className="sidebar-link-label">{item.label}</span>
-            </Link>
-          ))}
-        </div>
-
-        {quickActions.length > 0 && (
-          <div className="sidebar-section">
-            <span className="sidebar-section-title">Quick Actions</span>
-            <div className="sidebar-links">
-              {quickActions.map(action => (
-                <button
-                  key={action.label}
-                  className="sidebar-link quick-action-btn"
-                  onClick={() => {
-                    action.onClick();
-                    setMobileOpen(false);
-                  }}
-                >
-                  <div className="sidebar-link-icon">{action.icon}</div>
-                  <span className="sidebar-link-label">{action.label}</span>
-                </button>
-              ))}
+        {/* Grouped Navigation */}
+        <div className="sidebar-nav-scroll">
+          {navGroups.map((group, gi) => (
+            <div key={gi} className={`sidebar-group ${group.label ? 'labeled' : ''}`}>
+              {group.label && (
+                <span className="sidebar-group-title">{group.label}</span>
+              )}
+              <div className="sidebar-links">
+                {group.links.map(item => (
+                  <Link
+                    key={item.to + item.label}
+                    to={item.to}
+                    className={`sidebar-link ${location.pathname === item.to ? 'active' : ''}`}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <div className="sidebar-link-icon">{item.icon}</div>
+                    <span className="sidebar-link-label">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          ))}
+
+          {/* Quick Actions — compact pill row */}
+          {quickActions.length > 0 && (
+            <div className="sidebar-group labeled">
+              <span className="sidebar-group-title">
+                <HiOutlineLightningBolt className="title-icon" /> Quick
+              </span>
+              <div className="quick-actions-row">
+                {quickActions.map(action => (
+                  <button
+                    key={action.label}
+                    className="quick-pill"
+                    onClick={() => {
+                      action.onClick();
+                      setMobileOpen(false);
+                    }}
+                    title={action.label}
+                  >
+                    <span className="quick-pill-icon">{action.icon}</span>
+                    <span className="quick-pill-label">{action.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="sidebar-footer">
           {user ? (
@@ -172,9 +210,9 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
         </div>
       </nav>
 
-      <AddStudentModal 
-        isOpen = {isAddStudentModalOpen}
-        onClose = {() => setIsAddStudentModalOpen(false)}
+      <AddStudentModal
+        isOpen={isAddStudentModalOpen}
+        onClose={() => setIsAddStudentModalOpen(false)}
       />
     </>
   );

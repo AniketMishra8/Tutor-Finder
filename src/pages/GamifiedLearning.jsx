@@ -64,6 +64,17 @@ const trueFalseQs = [
   { statement: 'Photosynthesis occurs in the nucleus.', answer: false, explanation: 'Photosynthesis occurs in the chloroplasts.' },
 ];
 
+const balloonBurstQs = [
+  { prompt: 'Formula for Water', correct: 'H₂O', options: ['H₂O', 'CO₂', 'HO₂', 'H₂O₂'] },
+  { prompt: 'Einstein\'s Mass-Energy Equivalence', correct: 'E = mc²', options: ['E = mc²', 'F = ma', 'E = mg', 'P = mv'] },
+  { prompt: 'Pythagorean Theorem', correct: 'a² + b² = c²', options: ['a² + b² = c²', 'a + b = c', '2a + 2b = c²', 'a² - b² = c²'] },
+  { prompt: 'Newton\'s Second Law', correct: 'F = ma', options: ['F = ma', 'E = mc²', 'W = Fd', 'p = mv'] },
+  { prompt: 'Area of a Circle', correct: 'πr²', options: ['πr²', '2πr', 'πd', '4/3πr³'] },
+  { prompt: 'Ohm\'s Law', correct: 'V = IR', options: ['V = IR', 'P = IV', 'F = ma', 'Q = CV'] },
+  { prompt: 'Quadratic Formula Basis', correct: '-b ± √(b² - 4ac)', options: ['-b ± √(b² - 4ac)', 'b² - 4ac', '-b / 2a', 'a² + b²'] },
+  { prompt: 'Carbon Dioxide', correct: 'CO₂', options: ['CO₂', 'CO', 'C₂O', 'C₂O₂'] },
+];
+
 // ===== GAMES CONFIG =====
 const games = [
   {
@@ -101,6 +112,15 @@ const games = [
     color: '#ef4444',
     gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
     xp: 40,
+  },
+  {
+    id: 'balloon-burst',
+    title: 'Balloon Burst',
+    description: 'Pop the balloon with the correct formula!',
+    icon: <FaMedal />,
+    color: '#ec4899',
+    gradient: 'linear-gradient(135deg, #ec4899, #be185d)',
+    xp: 65,
   },
 ];
 
@@ -202,6 +222,7 @@ export default function GamifiedLearning() {
         {activeGame === 'memory-match' && <MemoryMatchGame onBack={() => setActiveGame(null)} onXP={addXP} />}
         {activeGame === 'speed-math' && <SpeedMathGame onBack={() => setActiveGame(null)} onXP={addXP} />}
         {activeGame === 'true-false' && <TrueFalseGame onBack={() => setActiveGame(null)} onXP={addXP} />}
+        {activeGame === 'balloon-burst' && <BalloonBurstGame onBack={() => setActiveGame(null)} onXP={addXP} />}
       </div>
     </div>
   );
@@ -571,6 +592,129 @@ function TrueFalseGame({ onBack, onXP }) {
       {feedback && (
         <div className={`feedback-toast ${feedback}`}>
           {feedback === 'correct' ? '✅ Correct!' : '❌ Wrong!'} — {q.explanation}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// =======================================
+// GAME 5: BALLOON BURST
+// =======================================
+function BalloonBurstGame({ onBack, onXP }) {
+  const [questions] = useState(() => shuffle(balloonBurstQs).slice(0, 5));
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [options, setOptions] = useState([]);
+  const [feedback, setFeedback] = useState(null); // 'correct', 'wrong', null
+  const [poppedIndex, setPoppedIndex] = useState(null);
+  const [wrongIndex, setWrongIndex] = useState(null);
+  const [finished, setFinished] = useState(false);
+
+  // Initialize options for the current question
+  useEffect(() => {
+    if (questions[current]) {
+      // Shuffle options and assign random flight speeds/delays
+      const shuffledOptions = shuffle(questions[current].options).map((opt, i) => ({
+        id: i,
+        text: opt,
+        delay: Math.random() * 2, // 0 to 2s delay
+        duration: 8 + Math.random() * 6, // 8-14s flight time
+        left: 10 + (i * 20) + Math.random() * 10, // Distribute horizontally
+        color: ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][i % 5]
+      }));
+      setOptions(shuffledOptions);
+      setFeedback(null);
+      setPoppedIndex(null);
+      setWrongIndex(null);
+    }
+  }, [current, questions]);
+
+  const handleBalloonClick = (opt) => {
+    if (feedback) return; // Ignore clicks if already animating
+
+    const isCorrect = opt.text === questions[current].correct;
+    if (isCorrect) {
+      setPoppedIndex(opt.id);
+      setFeedback('correct');
+      setScore(s => s + 1);
+      
+      setTimeout(() => {
+        moveToNext(true);
+      }, 1200);
+    } else {
+      setWrongIndex(opt.id);
+      setFeedback('wrong');
+      
+      setTimeout(() => {
+        moveToNext(false);
+      }, 1200);
+    }
+  };
+
+  const moveToNext = (wasCorrect) => {
+    if (current + 1 >= questions.length) {
+      const earnedXP = (score + (wasCorrect ? 1 : 0)) * 15;
+      onXP(earnedXP);
+      setFinished(true);
+    } else {
+      setCurrent(c => c + 1);
+    }
+  };
+
+  if (finished) {
+    return (
+      <GameResults
+        title="Balloon Burst"
+        color="#ec4899"
+        score={score}
+        total={questions.length}
+        xpEarned={score * 15}
+        onBack={onBack}
+        onRetry={() => { setCurrent(0); setScore(0); setFinished(false); }}
+      />
+    );
+  }
+
+  const q = questions[current];
+  return (
+    <div className="game-active glass-card overflow-hidden" style={{ minHeight: '500px' }}>
+      <GameHeader title="Balloon Burst" icon={<FaMedal />} color="#ec4899" current={current + 1} total={questions.length} onBack={onBack} />
+      
+      <div className="balloon-prompt-box">
+        <h3>{q.prompt}</h3>
+        <p>Pop the balloon with the correct formula!</p>
+      </div>
+
+      <div className="balloon-sky">
+        {options.map((opt) => {
+          const isPopped = poppedIndex === opt.id;
+          const isWrong = wrongIndex === opt.id;
+          
+          return (
+            <div 
+              key={opt.id} 
+              className={`balloon-container ${isPopped ? 'popped' : ''} ${isWrong ? 'wrong-shake' : ''} ${feedback && !isPopped && !isWrong ? 'fade-out' : ''}`}
+              style={{
+                left: `${opt.left}%`,
+                animationDuration: `${opt.duration}s`,
+                animationDelay: `${opt.delay}s`,
+              }}
+              onClick={() => handleBalloonClick(opt)}
+            >
+              <div className="balloon-body" style={{ backgroundColor: opt.color }}>
+                <span className="balloon-text">{opt.text}</span>
+              </div>
+              <div className="balloon-string"></div>
+            </div>
+          );
+        })}
+      </div>
+
+      {feedback && (
+        <div className={`feedback-toast ${feedback}`}>
+          {feedback === 'correct' ? <><HiOutlineCheckCircle /> *POP* Correct! 🎉</> : <><HiOutlineXCircle /> Oh no! The correct was: {q.correct}</>}
         </div>
       )}
     </div>

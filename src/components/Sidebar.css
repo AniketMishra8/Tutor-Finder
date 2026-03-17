@@ -10,13 +10,14 @@
   flex-direction: column;
   z-index: 100;
   transition: transform var(--transition-base), width var(--transition-base);
-  padding: 32px 0;
+  padding: 24px 0 16px;
 }
 
 .sidebar-header {
-  padding: 0 24px;
-  margin-bottom: 40px;
+  padding: 0 20px;
+  margin-bottom: 24px;
   position: relative;
+  flex-shrink: 0;
 }
 
 .sidebar-brand {
@@ -44,31 +45,93 @@
   color: var(--text-primary);
 }
 
+/* ====== SCROLLABLE NAV AREA ====== */
+
+.sidebar-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.06) transparent;
+}
+
+.sidebar-nav-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sidebar-nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+/* ====== GROUPED NAVIGATION ====== */
+
+.sidebar-group {
+  margin-bottom: 4px;
+}
+
+.sidebar-group.labeled {
+  margin-top: 8px;
+  padding-top: 10px;
+  position: relative;
+}
+
+.sidebar-group.labeled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.sidebar-group-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 20px;
+  margin-bottom: 6px;
+}
+
+.title-icon {
+  font-size: 0.8rem;
+  color: var(--primary-500);
+}
+
 .sidebar-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 0 16px;
-  flex: 1;
-  overflow-y: auto;
+  gap: 2px;
+  padding: 0 12px;
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 9px 12px;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: all var(--transition-base), transform var(--transition-base);
 }
 
 .sidebar-link:hover {
   background: var(--bg-tertiary);
   color: var(--text-primary);
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 .sidebar-link.active {
@@ -77,17 +140,59 @@
 }
 
 .sidebar-link-icon {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ====== QUICK ACTION PILLS ====== */
+
+.quick-actions-row {
+  display: flex;
+  gap: 6px;
+  padding: 0 12px;
+  flex-wrap: wrap;
+}
+
+.quick-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(253, 115, 51, 0.08);
+  border: 1px solid rgba(253, 115, 51, 0.15);
+  color: var(--primary-400, #FD7333);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.quick-pill:hover {
+  background: rgba(253, 115, 51, 0.15);
+  border-color: rgba(253, 115, 51, 0.3);
+  transform: translateY(-1px);
+}
+
+.quick-pill-icon {
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
 }
 
+/* ====== SIDEBAR FOOTER ====== */
+
 .sidebar-footer {
-  padding: 24px 24px 0;
+  padding: 16px 20px 0;
   border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 .sidebar-user {
@@ -114,7 +219,7 @@
 }
 
 .user-role {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   text-transform: capitalize;
 }
@@ -136,12 +241,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px;
+  padding: 10px;
   background: var(--primary-500);
   color: #fff;
   border-radius: var(--radius-full);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   transition: transform var(--transition-fast), background var(--transition-fast);
 }
 
@@ -161,7 +266,7 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  padding: 4px;
+  padding: 3px;
   width: 100%;
 }
 
@@ -170,11 +275,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 0;
+  padding: 5px 0;
   border-radius: var(--radius-full);
   color: var(--text-muted);
   transition: all var(--transition-fast);
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .theme-toggle-icon.active {
@@ -183,36 +288,8 @@
   box-shadow: var(--shadow-sm);
 }
 
-.sidebar-section {
-  margin-top: 32px;
-}
+/* ====== COLLAPSED STATE ====== */
 
-.sidebar-section-title {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0 16px;
-  margin-bottom: 12px;
-}
-
-.quick-action-btn {
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.quick-action-btn:hover {
-  background: rgba(253, 115, 51, 0.1);
-  color: var(--primary-500);
-}
-
-/* Sidebar Collapsed Styles */
 .sidebar.collapsed {
   width: var(--sidebar-width-collapsed);
 }
@@ -252,9 +329,9 @@
 .sidebar.collapsed .sidebar-link-label,
 .sidebar.collapsed .user-details,
 .sidebar.collapsed .sidebar-login-btn span,
-.sidebar.collapsed .sidebar-section-title,
-.sidebar.collapsed .theme-toggle-btn .active,
-.sidebar.collapsed .theme-toggle-btn> :not(.active) {
+.sidebar.collapsed .sidebar-group-title,
+.sidebar.collapsed .quick-pill-label,
+.sidebar.collapsed .theme-toggle-btn > :not(.active) {
   display: none;
 }
 
@@ -267,16 +344,17 @@
 }
 
 .sidebar.collapsed .sidebar-header {
-  padding: 0 16px;
+  padding: 0 12px;
   justify-content: center;
 }
 
 .sidebar.collapsed .sidebar-links {
   align-items: center;
+  padding: 0 8px;
 }
 
 .sidebar.collapsed .sidebar-link {
-  padding: 12px;
+  padding: 10px;
   justify-content: center;
 }
 
@@ -297,10 +375,28 @@
 }
 
 .sidebar.collapsed .sidebar-login-btn {
-  padding: 12px;
+  padding: 10px;
 }
 
-/* Mobile Sidebar Styles */
+.sidebar.collapsed .quick-actions-row {
+  flex-direction: column;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.sidebar.collapsed .quick-pill {
+  padding: 8px;
+  justify-content: center;
+  width: fit-content;
+}
+
+.sidebar.collapsed .sidebar-group.labeled::before {
+  left: 12px;
+  right: 12px;
+}
+
+/* ====== MOBILE ====== */
+
 .mobile-sidebar-toggle {
   display: none;
   position: fixed;
@@ -346,15 +442,16 @@
   }
 }
 
-/* Make Sidebar match Light Theme */
+/* ====== LIGHT THEME ====== */
+
 body.light-theme .sidebar {
-  background-color: #E2E8F0 !important; /* A cool, slightly darker light shade */
+  background-color: #E2E8F0 !important;
   border-right-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 body.light-theme .sidebar .brand-name,
 body.light-theme .sidebar .user-name {
-  color: #1A202C !important; /* Slate dark text */
+  color: #1A202C !important;
 }
 
 body.light-theme .sidebar .sidebar-logo {
@@ -362,23 +459,32 @@ body.light-theme .sidebar .sidebar-logo {
 }
 
 body.light-theme .sidebar .sidebar-link {
-  color: #4A5568 !important; /* Slate medium text */
+  color: #4A5568 !important;
 }
 
 body.light-theme .sidebar .sidebar-link:hover {
-  background-color: #CBD5E1 !important; /* Deeper cool gray on hover */
+  background-color: #CBD5E1 !important;
   color: #1A202C !important;
 }
 
 body.light-theme .sidebar .sidebar-link.active {
-  background-color: #FFFFFF !important; /* High contrast active state */
+  background-color: #FFFFFF !important;
   color: var(--primary-500) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
-body.light-theme .sidebar .sidebar-section-title,
+body.light-theme .sidebar .sidebar-group-title,
 body.light-theme .sidebar .user-role {
-  color: #718096 !important; /* Slate light text */
+  color: #718096 !important;
+}
+
+body.light-theme .sidebar .sidebar-group.labeled::before {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .sidebar .quick-pill {
+  background: rgba(253, 115, 51, 0.06);
+  border-color: rgba(253, 115, 51, 0.12);
 }
 
 body.light-theme .sidebar .theme-toggle-btn {

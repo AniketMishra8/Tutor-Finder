@@ -20,6 +20,8 @@ import BookRecommendations from './pages/BookRecommendations';
 import { useAuth } from './context/AuthContext';
 import PracticeQuiz from './pages/PracticeQuiz';
 import GamifiedLearning from './pages/GamifiedLearning';
+import CareerConsultation from './pages/CareerConsultation';
+import RewardsStore from './pages/RewardsStore';
 
 function AIChatbotWrapper() {
   const { user } = useAuth();
@@ -52,6 +54,8 @@ function App() {
               <Route path="/book-recommendations" element={<BookRecommendations />} />
               <Route path="/practice-quiz" element={<PracticeQuiz />} />
               <Route path="/gamified-learning" element={<GamifiedLearning />} />
+              <Route path="/career-consultation" element={<CareerConsultation />} />
+              <Route path="/rewards-store" element={<RewardsStore />} />
             </Routes>
           </main>
         </div>

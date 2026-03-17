@@ -44,7 +44,7 @@ const isStrongPassword = (password) => {
 /**
  * Allowed roles for registration.
  */
-const VALID_ROLES = ['student', 'parent', 'tutor'];
+const VALID_ROLES = ['student', 'parent', 'teacher'];
 
 // ─── 1. REGISTER ROUTE ────────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
@@ -67,7 +67,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 8 characters with uppercase, lowercase, digit, and special character.' });
     }
     if (!VALID_ROLES.includes(role)) {
-      return res.status(400).json({ error: 'Invalid role. Must be student, parent, or tutor.' });
+      return res.status(400).json({ error: 'Invalid role. Must be student, parent, or teacher.' });
     }
     // A. Check if user already exists
     let existingUser = await User.findOne({ email });

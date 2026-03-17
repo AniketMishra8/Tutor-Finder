@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { HiOutlineAcademicCap, HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineArrowLeft, HiOutlineClock, HiOutlineLightningBolt } from 'react-icons/hi';
-import { FaFlask, FaDna, FaCalculator, FaAtom, FaMedal, FaTrophy } from 'react-icons/fa';
+import { HiOutlineAcademicCap, HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineArrowLeft, HiOutlineClock, HiOutlineLightningBolt, HiOutlineShieldCheck, HiOutlineExclamation } from 'react-icons/hi';
+import { FaFlask, FaDna, FaCalculator, FaAtom, FaMedal, FaTrophy, FaLock } from 'react-icons/fa';
 import './PracticeQuiz.css';
 
 // ====== QUIZ DATA ======
@@ -63,6 +63,8 @@ const quizzes = {
   }
 };
 
+const MAX_VIOLATIONS = 3;
+
 export default function PracticeQuiz() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -74,6 +76,15 @@ export default function PracticeQuiz() {
   const [answers, setAnswers] = useState([]);
   const [timer, setTimer] = useState(30);
   const [quizFinished, setQuizFinished] = useState(false);
+
+  // Screen lock states
+  const [showFocusPrompt, setShowFocusPrompt] = useState(false);
+  const [pendingQuizKey, setPendingQuizKey] = useState(null);
+  const [violationCount, setViolationCount] = useState(0);
+  const [showViolationWarning, setShowViolationWarning] = useState(false);
+  const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const quizActiveRef = useRef(false);
+  const violationCountRef = useRef(0);
 
   useEffect(() => {
     if (!user) navigate('/login');
@@ -90,6 +101,75 @@ export default function PracticeQuiz() {
     return () => clearInterval(interval);
   }, [timer, selectedQuiz, showResult, quizFinished]);
 
+  // ====== SCREEN LOCK: Visibility API + beforeunload ======
+  useEffect(() => {
+    const isQuizActive = selectedQuiz && !quizFinished;
+    quizActiveRef.current = isQuizActive;
+
+    if (!isQuizActive) return;
+
+    const handleVisibilityChange = () => {
+      if (!quizActiveRef.current) return;
+      if (document.hidden) {
+        violationCountRef.current += 1;
+        setViolationCount(violationCountRef.current);
+        setShowViolationWarning(true);
+
+        if (violationCountRef.current >= MAX_VIOLATIONS) {
+          setAutoSubmitted(true);
+          setQuizFinished(true);
+        }
+      }
+    };
+
+    const handleBeforeUnload = (e) => {
+      if (!quizActiveRef.current) return;
+      e.preventDefault();
+      e.returnValue = 'You have an active quiz! Leaving will count as a violation.';
+    };
+
+    // Block keyboard shortcuts for tab switching
+    const handleKeyDown = (e) => {
+      if (!quizActiveRef.current) return;
+      // Block Ctrl+Tab, Ctrl+W, Alt+Tab, Alt+F4
+      if ((e.ctrlKey && (e.key === 'Tab' || e.key === 'w' || e.key === 'W')) ||
+          (e.altKey && (e.key === 'Tab' || e.key === 'F4'))) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [selectedQuiz, quizFinished]);
+
+  const dismissWarning = () => {
+    setShowViolationWarning(false);
+  };
+
+  const requestStartQuiz = (key) => {
+    setPendingQuizKey(key);
+    setShowFocusPrompt(true);
+  };
+
+  const confirmFocusAndStart = () => {
+    setShowFocusPrompt(false);
+    startQuiz(pendingQuizKey);
+    setPendingQuizKey(null);
+  };
+
+  const cancelFocusPrompt = () => {
+    setShowFocusPrompt(false);
+    setPendingQuizKey(null);
+  };
+
   const startQuiz = (key) => {
     setSelectedQuiz(key);
     setCurrentQ(0);
@@ -99,6 +179,10 @@ export default function PracticeQuiz() {
     setAnswers([]);
     setTimer(30);
     setQuizFinished(false);
+    setViolationCount(0);
+    violationCountRef.current = 0;
+    setAutoSubmitted(false);
+    setShowViolationWarning(false);
   };
 
   const handleAnswer = (index) => {
@@ -136,6 +220,36 @@ export default function PracticeQuiz() {
 
   if (!user) return null;
 
+  // ====== FOCUS COMMITMENT PROMPT ======
+  if (showFocusPrompt) {
+    return (
+      <div className="practice-page page-enter">
+        <div className="screen-lock-overlay">
+          <div className="focus-prompt-card glass-card">
+            <div className="focus-prompt-icon">
+              <FaLock />
+            </div>
+            <h2 className="focus-prompt-title">🔒 Focus Mode Required</h2>
+            <p className="focus-prompt-text">
+              This quiz requires your full attention. Once you start:
+            </p>
+            <ul className="focus-prompt-rules">
+              <li><HiOutlineExclamation className="rule-icon warning" /> Switching tabs will be <strong>detected and counted</strong></li>
+              <li><HiOutlineExclamation className="rule-icon warning" /> After <strong>{MAX_VIOLATIONS} violations</strong>, the quiz will auto-submit</li>
+              <li><HiOutlineShieldCheck className="rule-icon success" /> Stay focused to get the best score!</li>
+            </ul>
+            <div className="focus-prompt-actions">
+              <button className="btn-cancel-focus" onClick={cancelFocusPrompt}>Cancel</button>
+              <button className="btn-accept-focus" onClick={confirmFocusAndStart}>
+                <FaLock /> I'm Ready — Start Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ====== QUIZ SELECTION MENU ======
   if (!selectedQuiz) {
     return (
@@ -156,7 +270,7 @@ export default function PracticeQuiz() {
         <div className="container practice-content">
           <div className="quiz-grid">
             {Object.entries(quizzes).map(([key, quiz]) => (
-              <div key={key} className="quiz-card glass-card" onClick={() => startQuiz(key)}>
+              <div key={key} className="quiz-card glass-card" onClick={() => requestStartQuiz(key)}>
                 <div className="quiz-card-icon" style={{ background: `${quiz.color}20`, color: quiz.color }}>
                   {quiz.icon}
                 </div>
@@ -166,6 +280,7 @@ export default function PracticeQuiz() {
                   <span>{quiz.questions.length} Questions</span>
                   <span>~{quiz.questions.length * 0.5} min</span>
                 </div>
+                <div className="quiz-card-lock-badge"><FaLock /> Focus Mode</div>
                 <button className="quiz-start-btn" style={{ background: quiz.color }}>Start Quiz →</button>
               </div>
             ))}
@@ -186,13 +301,19 @@ export default function PracticeQuiz() {
       <div className="practice-page page-enter">
         <div className="container quiz-results-container">
           <div className="quiz-results glass-card">
+            {autoSubmitted && (
+              <div className="auto-submit-banner">
+                <HiOutlineExclamation />
+                <span>Quiz was auto-submitted due to {MAX_VIOLATIONS} tab-switch violations</span>
+              </div>
+            )}
             <div className="results-trophy">
               {pct >= 70 ? <FaTrophy style={{ color: '#fbbf24' }} /> : <FaMedal style={{ color: '#a78bfa' }} />}
             </div>
-            <h2 className="results-title">Quiz Complete!</h2>
+            <h2 className="results-title">{autoSubmitted ? 'Quiz Auto-Submitted!' : 'Quiz Complete!'}</h2>
             <p className="results-subject" style={{ color: quiz.color }}>{quiz.title}</p>
             
-            <div className="results-score-ring" style={{ borderColor: quiz.color }}>
+            <div className="results-score-ring" style={{ borderColor: autoSubmitted ? '#ef4444' : quiz.color }}>
               <span className="results-score-number">{pct}%</span>
               <span className="results-grade">Grade: {grade}</span>
             </div>
@@ -206,6 +327,12 @@ export default function PracticeQuiz() {
                 <HiOutlineXCircle style={{ color: '#ef4444' }} />
                 <span>{quiz.questions.length - score} Wrong</span>
               </div>
+              {violationCount > 0 && (
+                <div className="results-stat">
+                  <HiOutlineExclamation style={{ color: '#f59e0b' }} />
+                  <span>{violationCount} Violation{violationCount > 1 ? 's' : ''}</span>
+                </div>
+              )}
             </div>
 
             <div className="results-review">
@@ -240,6 +367,43 @@ export default function PracticeQuiz() {
 
   return (
     <div className="practice-page page-enter">
+      {/* Violation Warning Overlay */}
+      {showViolationWarning && (
+        <div className="violation-overlay">
+          <div className="violation-card glass-card">
+            <div className="violation-icon-pulse">
+              <HiOutlineExclamation />
+            </div>
+            <h2 className="violation-title">⚠️ Tab Switch Detected!</h2>
+            <p className="violation-text">
+              You switched away from the quiz. This has been recorded.
+            </p>
+            <div className="violation-counter">
+              <span className="violation-count">{violationCount}</span>
+              <span className="violation-max">/ {MAX_VIOLATIONS}</span>
+            </div>
+            <p className="violation-warning-text">
+              {MAX_VIOLATIONS - violationCount > 0
+                ? `${MAX_VIOLATIONS - violationCount} more violation${MAX_VIOLATIONS - violationCount > 1 ? 's' : ''} and the quiz will be auto-submitted!`
+                : 'Quiz has been auto-submitted!'}
+            </p>
+            <button className="btn-dismiss-violation" onClick={dismissWarning}>
+              I Understand — Continue Quiz
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Violation Status Bar */}
+      {violationCount > 0 && !showViolationWarning && (
+        <div className="violation-status-bar">
+          <FaLock /> <span>Focus Mode Active</span>
+          <span className="violation-status-count">
+            Violations: {violationCount}/{MAX_VIOLATIONS}
+          </span>
+        </div>
+      )}
+
       <div className="container quiz-active-container">
         <div className="quiz-active glass-card">
           {/* Header */}
