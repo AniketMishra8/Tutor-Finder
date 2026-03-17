@@ -49,11 +49,56 @@ async function sendVerificationEmail(email, otp) {
   await transporter.sendMail(mailOptions);
 }
 
-// 1. REGISTER ROUTE
+// ─── VALIDATION HELPERS ───────────────────────────────────────────────────────
+
+/**
+ * Validates email format using RFC-compliant regex.
+ * Accepts: user@domain.com, user.name+tag@sub.domain.org, etc.
+ */
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(String(email).toLowerCase());
+};
+
+/**
+ * Validates name:
+ * - 2 to 50 characters long
+ * - Only letters, spaces, hyphens, and apostrophes (e.g. "O'Brien", "Mary-Jane")
+ * - Must start and end with a letter
+ */
+const isValidName = (name) => {
+  const nameRegex = /^[A-Za-z][A-Za-z\s'\-]{0,48}[A-Za-z]$|^[A-Za-z]{2}$/;
+  return nameRegex.test(name.trim());
+};
+
+/**
+ * Validates password strength:
+ * - Minimum 8 characters
+ * - At least one uppercase letter
+ * - At least one lowercase letter
+ * - At least one digit
+ * - At least one special character
+ */
+const isStrongPassword = (password) => {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_\-])[A-Za-z\d@$!%*?&^#_\-]{8,}$/;
+  return passwordRegex.test(password);
+};
+
+/**
+ * Allowed roles for registration.
+ */
+const VALID_ROLES = ['student', 'parent', 'tutor'];
+
+// ─── 1. REGISTER ROUTE ────────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role, studentEmail } = req.body;
 
+    // ── STEP 1: Check all required fields are present ──
+    // ── STEP 1: Check all required fields are present ──
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ error: 'Name, email, password, and role are all required.' });
+    }
     // A. Check if user already exists
     let existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -72,31 +117,29 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // D. Generate OTP
-    const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-    // E. Create user (unverified)
+    // E. Create user (treat as verified immediately)
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
       role,
-      studentEmail: role === 'parent' ? studentEmail : undefined,
-      isVerified: false,
-      verificationToken: otp,
-      verificationTokenExpires: otpExpires
+      studentEmail: role === 'parent' ? studentEmail : undefined
     });
 
     await newUser.save();
 
-    // F. Send verification email
-    await sendVerificationEmail(email, otp);
+    // Auto-login upon registration
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
-      needsVerification: true,
-      message: 'Registration successful! Please check your email for the verification code.',
-      email: email
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        isProfileComplete: newUser.isProfileComplete
+      }
     });
 
   } catch (error) {
@@ -105,108 +148,27 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// 2. VERIFY EMAIL ROUTE
-router.post('/verify-email', async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-
-    const user = await User.findOne({
-      email,
-      verificationToken: otp,
-      verificationTokenExpires: { $gt: Date.now() }
-    });
-
-    if (!user) {
-      return res.status(400).json({ error: 'Invalid or expired verification code. Please try again or request a new one.' });
-    }
-
-    // Mark user as verified
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
-    await user.save();
-
-    // Generate JWT and auto-login
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isProfileComplete: user.isProfileComplete
-      }
-    });
-
-  } catch (error) {
-    console.error('Verify Email Error:', error);
-    res.status(500).json({ error: 'Server error during email verification.' });
-  }
-});
-
-// 3. RESEND OTP ROUTE
-router.post('/resend-otp', async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: 'No account found with this email.' });
-    }
-
-    if (user.isVerified) {
-      return res.status(400).json({ error: 'This account is already verified. Please login.' });
-    }
-
-    // Generate new OTP
-    const otp = generateOTP();
-    user.verificationToken = otp;
-    user.verificationTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
-    await user.save();
-
-    // Send email
-    await sendVerificationEmail(email, otp);
-
-    res.json({ message: 'A new verification code has been sent to your email.' });
-
-  } catch (error) {
-    console.error('Resend OTP Error:', error);
-    res.status(500).json({ error: 'Server error while resending verification code.' });
-  }
-});
-
-// 4. LOGIN ROUTE
+// 2. LOGIN ROUTE
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // A. Check if user exists
+    // A. Check if user exists (we must explicitly request the password field since it has select: false in schema)
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return res.status(400).json({ error: 'Invalid email or password.' });
     }
 
-    // B. Check if verified
-    if (!user.isVerified) {
-      return res.status(403).json({ 
-        error: 'Please verify your email before logging in.',
-        needsVerification: true,
-        email: user.email
-      });
-    }
-
-    // C. Check password
+    // B. Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return res.status(400).json({ error: 'Invalid email or password.' });
     }
 
-    // D. Generate Token
+    // C. Generate Token
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
 
-    // E. If parent, attach the student's name
+    // D. If parent, attach the student's name for UI convenience
     let studentName = null;
     if (user.role === 'parent') {
       const child = await User.findOne({ email: user.studentEmail, role: 'student' });

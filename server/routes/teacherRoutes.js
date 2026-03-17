@@ -123,9 +123,8 @@ router.get('/', async (req, res) => {
   try {
     const teachers = await User.find({
       role: 'teacher',
-      isVerified: true,
       isProfileComplete: true
-    }).select('-password -verificationToken -verificationTokenExpires -studentEmail');
+    }).select('-password -studentEmail');
 
     const formatted = teachers.map(t => ({
       id: t._id,
@@ -165,9 +164,8 @@ router.get('/:id', async (req, res) => {
     const teacher = await User.findOne({
       _id: req.params.id,
       role: 'teacher',
-      isVerified: true,
       isProfileComplete: true
-    }).select('-password -verificationToken -verificationTokenExpires -studentEmail');
+    }).select('-password -studentEmail');
 
     if (!teacher) {
       return res.status(404).json({ error: 'Teacher not found.' });

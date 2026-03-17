@@ -32,18 +32,6 @@ const userSchema = new mongoose.Schema({
     lowercase: true
   },
 
-  // Email Verification
-  isVerified: {
-    type: Boolean,
-    default: false
-  },
-  verificationToken: {
-    type: String
-  },
-  verificationTokenExpires: {
-    type: Date
-  },
-
   // Teacher Profile Fields
   subjects: [{
     type: String,

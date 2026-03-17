@@ -37,13 +37,8 @@ export default function Register() {
     setIsLoading(true);
     
     try {
-      const result = await register(formData);
-      if (result.needsVerification) {
-        // Redirect to email verification page
-        navigate('/verify-email', { state: { email: result.email } });
-      } else {
-        navigate('/dashboard');
-      }
+      await register(formData);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {

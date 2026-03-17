@@ -11,7 +11,6 @@ import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
 import TeacherProfileSetup from './pages/TeacherProfileSetup';
 import { useAuth } from './context/AuthContext';
 
@@ -34,7 +33,6 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/teacher-profile-setup" element={<TeacherProfileSetup />} />
               <Route path="/find-tutor" element={<FindTutor />} />
               <Route path="/tutor/:id" element={<TutorProfile />} />

@@ -27,11 +27,7 @@ export default function Login() {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      if (err.needsVerification) {
-        navigate('/verify-email', { state: { email: err.email } });
-      } else {
-        setError(err.message);
-      }
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
