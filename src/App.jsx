@@ -12,6 +12,11 @@ import About from './pages/About';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import TeacherProfileSetup from './pages/TeacherProfileSetup';
+import ScheduleSession from './pages/ScheduleSession';
+import Assignments from './pages/Assignments';
+import AddStudent from './pages/AddStudent';
+import Messages from './pages/Messages';
+import BookRecommendations from './pages/BookRecommendations';
 import { useAuth } from './context/AuthContext';
 
 function AIChatbotWrapper() {
@@ -38,6 +43,11 @@ function App() {
               <Route path="/tutor/:id" element={<TutorProfile />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/about" element={<About />} />
+              <Route path="/schedule-session" element={<ScheduleSession />} />
+              <Route path="/assignments" element={<Assignments />} />
+              <Route path="/add-student" element={<AddStudent />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/book-recommendations" element={<BookRecommendations />} />
             </Routes>
           </main>
         </div>

@@ -26,8 +26,10 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
     if (user.role === 'student') {
       navigation.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
       navigation.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
+      navigation.push({ to: '/book-recommendations', label: 'Book Picks', icon: <HiOutlineBookOpen /> });
     } else if (user.role === 'teacher') {
       navigation.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
+      navigation.push({ to: '/book-recommendations', label: 'Book Picks', icon: <HiOutlineBookOpen /> });
     } else if (user.role === 'parent') {
       navigation.push({ to: '/dashboard', label: 'Dashboard', icon: <HiOutlineViewGrid /> });
       navigation.push({ to: '/find-tutor', label: 'Find Tutor', icon: <HiOutlineSearch /> });
@@ -42,21 +44,21 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
   if (user) {
     if (user.role === 'student') {
       quickActions = [
-        { label: 'Join Session', icon: <FaVideo />, onClick: () => alert('Connecting to your next session...') },
+        { label: 'Join Session', icon: <FaVideo />, onClick: () => navigate('/schedule-session') },
         { label: 'Find a Tutor', icon: <HiOutlineSearch />, onClick: () => navigate('/find-tutor') },
-        { label: 'Practice Skills', icon: <HiOutlineAcademicCap />, onClick: () => alert('Opening skill practice module...') },
+        { label: 'Practice Skills', icon: <HiOutlineAcademicCap />, onClick: () => navigate('/assignments') },
       ];
     } else if (user.role === 'teacher') {
       quickActions = [
-        { label: 'Schedule Session', icon: <HiOutlineCalendar />, onClick: () => alert('Opening scheduler...') },
-        { label: 'Manage Assignments', icon: <HiOutlineBookOpen />, onClick: () => alert('Opening assignments...') },
-        { label: 'Add Student', icon: <HiOutlineUsers />, onClick: () => alert('Opening student invite form...') },
+        { label: 'Schedule Session', icon: <HiOutlineCalendar />, onClick: () => navigate('/schedule-session') },
+        { label: 'Manage Assignments', icon: <HiOutlineBookOpen />, onClick: () => navigate('/assignments') },
+        { label: 'Add Student', icon: <HiOutlineUsers />, onClick: () => navigate('/add-student') },
       ];
     } else if (user.role === 'parent') {
       quickActions = [
-        { label: 'Schedule Session', icon: <HiOutlineCalendar />, onClick: () => alert('Opening scheduler...') },
-        { label: 'View Report Card', icon: <HiOutlineBookOpen />, onClick: () => alert('Downloading report card...') },
-        { label: 'Message Tutor', icon: <HiOutlineUsers />, onClick: () => alert('Opening messages...') },
+        { label: 'Schedule Session', icon: <HiOutlineCalendar />, onClick: () => navigate('/schedule-session') },
+        { label: 'View Report Card', icon: <HiOutlineBookOpen />, onClick: () => navigate('/assignments') },
+        { label: 'Message Tutor', icon: <HiOutlineUsers />, onClick: () => navigate('/messages') },
       ];
     }
   }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { HiOutlineStar, HiOutlineBadgeCheck, HiOutlineClock, HiOutlineGlobe, HiOutlineCalendar, HiOutlineChatAlt2 } from 'react-icons/hi';
 import { FaVideo, FaMapMarkerAlt, FaEthereum, FaChevronLeft } from 'react-icons/fa';
 import { tutors } from '../data/mockData';
@@ -7,6 +7,7 @@ import './TutorProfile.css';
 
 export default function TutorProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const tutor = tutors.find(t => t.id === parseInt(id)) || tutors[0];
   const [sessionMode, setSessionMode] = useState('online');
   const [selectedDay, setSelectedDay] = useState(null);
@@ -196,11 +197,11 @@ export default function TutorProfile() {
                 </div>
               </div>
 
-              <button className="btn btn-primary" style={{ width: '100%', marginTop: 8 }}>
+              <button className="btn btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={() => navigate('/schedule-session')}>
                 <HiOutlineCalendar /> Schedule Session
               </button>
 
-              <button className="btn btn-secondary" style={{ width: '100%', marginTop: 8 }}>
+              <button className="btn btn-secondary" style={{ width: '100%', marginTop: 8 }} onClick={() => navigate('/messages')}>
                 <HiOutlineChatAlt2 /> Send Message
               </button>
             </div>

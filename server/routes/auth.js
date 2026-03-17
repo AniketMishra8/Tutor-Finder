@@ -2,52 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
 const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'temporary_secret_for_development';
-
-// ====== EMAIL TRANSPORTER ======
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// Generate 6-digit OTP
-function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-// Send OTP Email
-async function sendVerificationEmail(email, otp) {
-  // If no email credentials are set, log to console (dev mode)
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.log(`\n📧 [DEV MODE] Verification OTP for ${email}: ${otp}\n`);
-    return;
-  }
-
-  const mailOptions = {
-    from: `"Tutor Finder" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: '🔐 Verify Your Tutor Finder Account',
-    html: `
-      <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 32px; background: linear-gradient(135deg, #1a1a24, #2a2a3a); border-radius: 16px; color: #f4f4f5;">
-        <h1 style="text-align: center; color: #FD7333; margin-bottom: 8px;">Tutor Finder</h1>
-        <p style="text-align: center; color: #a1a1aa; margin-bottom: 24px;">Verify your email to get started</p>
-        <div style="text-align: center; background: rgba(253,115,51,0.1); border: 1px solid rgba(253,115,51,0.3); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-          <p style="color: #a1a1aa; margin: 0 0 8px 0; font-size: 14px;">Your verification code is:</p>
-          <h2 style="color: #FD7333; font-size: 36px; letter-spacing: 8px; margin: 0;">${otp}</h2>
-        </div>
-        <p style="color: #71717a; font-size: 13px; text-align: center;">This code expires in 10 minutes. If you didn't request this, please ignore this email.</p>
-      </div>
-    `
-  };
-
-  await transporter.sendMail(mailOptions);
-}
 
 // ─── VALIDATION HELPERS ───────────────────────────────────────────────────────
 
@@ -95,9 +52,22 @@ router.post('/register', async (req, res) => {
     const { name, email, password, role, studentEmail } = req.body;
 
     // ── STEP 1: Check all required fields are present ──
-    // ── STEP 1: Check all required fields are present ──
     if (!name || !email || !password || !role) {
       return res.status(400).json({ error: 'Name, email, password, and role are all required.' });
+    }
+
+    // ── STEP 2: Validate inputs ──
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: 'Please provide a valid email address.' });
+    }
+    if (!isValidName(name)) {
+      return res.status(400).json({ error: 'Name must be 2-50 letters (spaces, hyphens, apostrophes allowed).' });
+    }
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters with uppercase, lowercase, digit, and special character.' });
+    }
+    if (!VALID_ROLES.includes(role)) {
+      return res.status(400).json({ error: 'Invalid role. Must be student, parent, or tutor.' });
     }
     // A. Check if user already exists
     let existingUser = await User.findOne({ email });

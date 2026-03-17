@@ -186,6 +186,13 @@ function StudentDashboard({ user, getInitials }) {
           </div>
           <div className="dashboard-sidebar">
             <div className="sidebar-card glass-card">
+              <h3 className="sidebar-title">⚡ Quick Actions</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => navigate('/schedule-session')}>📅 Schedule Session</button>
+                <button className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#f4f4f5', borderColor: 'rgba(255,255,255,0.1)' }} onClick={() => navigate('/assignments')}>📝 View Assignments</button>
+              </div>
+            </div>
+            <div className="sidebar-card glass-card">
               <h3 className="sidebar-title">📅 Upcoming Sessions</h3>
               <div className="sessions-list">
                 {upcomingSessions.map((session, i) => (
@@ -354,6 +361,14 @@ function TeacherDashboard({ user, getInitials }) {
 
           {/* Teacher Sidebar */}
           <div className="dashboard-sidebar">
+            <div className="sidebar-card glass-card">
+              <h3 className="sidebar-title">⚡ Quick Actions</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => navigate('/schedule-session')}>📅 Schedule Session</button>
+                <button className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#f4f4f5', borderColor: 'rgba(255,255,255,0.1)' }} onClick={() => navigate('/assignments')}>📝 Manage Assignments</button>
+                <button className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#f4f4f5', borderColor: 'rgba(255,255,255,0.1)' }} onClick={() => navigate('/add-student')}>➕ Add Student</button>
+              </div>
+            </div>
             <div className="sidebar-card glass-card">
               <h3 className="sidebar-title">📅 Upcoming Sessions</h3>
               <div className="sessions-list">
