@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { HiOutlineAcademicCap, HiOutlineHome, HiOutlineSearch, HiOutlineViewGrid, HiOutlineInformationCircle, HiOutlineLogout, HiOutlineLogin, HiOutlineMoon, HiOutlineSun, HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineUsers, HiOutlineLightningBolt } from 'react-icons/hi';
+import { HiOutlineAcademicCap, HiOutlineHome, HiOutlineSearch, HiOutlineViewGrid, HiOutlineInformationCircle, HiOutlineLogout, HiOutlineLogin, HiOutlineMoon, HiOutlineSun, HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineCalendar, HiOutlineBookOpen, HiOutlineUsers, HiOutlineLightningBolt, HiOutlineLightBulb } from 'react-icons/hi';
 import { FaVideo, FaGamepad, FaCompass, FaGem } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -61,6 +61,7 @@ export default function Sidebar({ isCollapsed, toggleCollapse }) {
   // Explore group — career & rewards for student, career for teacher
   if (user && (user.role === 'student' || user.role === 'teacher')) {
     const exploreLinks = [
+      { to: '/suggestion-portal', label: 'AI Match Portal', icon: <HiOutlineLightBulb /> },
       { to: '/career-consultation', label: 'Career Guidance', icon: <FaCompass /> },
     ];
     if (user.role === 'student') {

@@ -22,6 +22,7 @@ import PracticeQuiz from './pages/PracticeQuiz';
 import GamifiedLearning from './pages/GamifiedLearning';
 import CareerConsultation from './pages/CareerConsultation';
 import RewardsStore from './pages/RewardsStore';
+import SuggestionPortal from './pages/SuggestionPortal';
 
 function AIChatbotWrapper() {
   const { user } = useAuth();
@@ -56,6 +57,7 @@ function App() {
               <Route path="/gamified-learning" element={<GamifiedLearning />} />
               <Route path="/career-consultation" element={<CareerConsultation />} />
               <Route path="/rewards-store" element={<RewardsStore />} />
+              <Route path="/suggestion-portal" element={<SuggestionPortal />} />
             </Routes>
           </main>
         </div>
