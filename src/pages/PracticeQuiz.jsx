@@ -468,6 +468,29 @@ export default function PracticeQuiz() {
   const [pendingTopic, setPendingTopic] = useState(null);
   const quizActiveRef = useRef(false);
   const violationRef = useRef(0);
+  const [scoreSaved, setScoreSaved] = useState(false);
+
+  // Save quiz score to backend when result screen is shown
+  useEffect(() => {
+    if (screen !== 'result') return;
+    if (!user?.id || !selectedSubject || !selectedTopic || questions.length === 0) return;
+    const avgTime = 30; // approximate seconds per question
+    fetch('http://localhost:5000/api/ml/quiz-score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        studentId: user.id,
+        subject: selectedSubject.name,
+        topic: selectedTopic,
+        score: pct,
+        correct: finalScore,
+        total: questions.length,
+        timePerQuestion: avgTime
+      })
+    })
+      .then(r => { if (r.ok) setScoreSaved(true); })
+      .catch(() => {});
+  }, [screen]);
 
   useEffect(() => { if (!user) navigate('/login'); }, [user, navigate]);
 
@@ -807,6 +830,11 @@ export default function PracticeQuiz() {
             {autoSubmitted && (
               <div className="pq-auto-banner">
                 <HiOutlineExclamation /> Quiz auto-submitted: {MAX_VIOLATIONS} tab-switch violations
+              </div>
+            )}
+            {scoreSaved && (
+              <div style={{ textAlign: 'center', color: '#10b981', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600 }}>
+                ✅ Score saved to your profile — AI analysis updated!
               </div>
             )}
             <div className="pq-result-trophy">{emoji}</div>

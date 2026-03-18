@@ -1,133 +1,195 @@
-# Tutor Finder
+# 🎓 DeepThink — AI-Powered Hybrid Tutor Finder
 
-A modern web application for finding and connecting with tutors. Built with React on the frontend and Node.js/Express on the backend, featuring user authentication, tutor profiles, an AI-powered chatbot using Google's Gemini API, and a responsive dashboard.
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![brain.js](https://img.shields.io/badge/brain.js-ML_Engine-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
-## Features
+> A full-stack AI-powered education platform that matches students with tutors using trained neural networks, tracks learning progress with ML-driven performance analytics, and supports hybrid (online + offline) learning.
 
-- **User Authentication**: Secure login and registration with JWT tokens
-- **Tutor Discovery**: Browse and search for tutors by subject and availability
-- **Tutor Profiles**: Detailed profiles with ratings and reviews
-- **AI Chatbot**: Integrated chatbot powered by Google Gemini for assistance
-- **Dashboard**: Personalized dashboard for students and tutors
-- **Responsive Design**: Mobile-friendly interface
+---
 
-## Tech Stack
+## ✨ Key Features
 
-### Frontend
-- React 19
-- Vite (build tool)
-- React Router (navigation)
-- Recharts (data visualization)
-- React Icons
+| Feature | Description |
+|---------|-------------|
+| 🤖 **AI Smart Matching** | brain.js neural network matches students with tutors based on subject, mode, location, budget, and learning style |
+| 📊 **ML Performance Prediction** | Trained neural network analyzes quiz history to classify students as weak/average/strong with confidence scores |
+| 🎯 **AI Tutor Recommendations** | Performance-aware recommendations combining student level with tutor compatibility |
+| 📝 **Practice Quiz System** | 250+ questions across 10 subjects with timed focus mode, tab-switch detection, and score tracking |
+| 📅 **Session Booking** | Book sessions with tutors — pick tutor, date, time, mode — saved to MongoDB and shown in dashboard |
+| 🎮 **Gamified Learning** | Badges, streaks, leaderboards, rewards store to keep students motivated |
+| 👨‍👩‍👧 **Role-Based Dashboards** | Separate dashboards for Students, Teachers, and Parents with relevant analytics |
+| 💬 **AI Chatbot** | Google Gemini-powered chatbot for instant assistance |
+| 📚 **Book Recommendations** | AI-curated book suggestions based on student interests |
+| 🏆 **Career Consultation** | Personalized career guidance based on skills and performance |
+| 🔐 **Secure Auth** | JWT-based authentication with password strength validation |
+| 🌗 **Dark Mode UI** | Premium glassmorphism design with animations and responsive layout |
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- JWT (authentication)
-- bcryptjs (password hashing)
-- CORS
+---
 
-## Prerequisites
+## 🧠 ML Model Architecture
 
-- Node.js (v16 or higher)
-- MongoDB (local or cloud instance like MongoDB Atlas)
-- Google Gemini API key
+We use **brain.js** (JavaScript neural networks) — not just API calls — to train **3 real ML models** on custom datasets:
 
-## Installation
+### 1. Tutor Match Model (`matchModel.json`)
+- **Input**: Subject match, mode match, location, budget fit, tutor rating, experience, teaching style, language
+- **Output**: Compatibility score (0–100%)
+- **Use**: Ranks tutors by AI match score when students browse
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd tutor-finder
-   ```
+### 2. Performance Prediction Model (`perfModel.json`)
+- **Input**: Average quiz score, attempts, consistency, recent trend, time per question, topics covered
+- **Output**: Classification — `weak` / `average` / `strong` with confidence percentages
+- **Use**: Dashboard AI Performance Analysis card, personalized study advice
 
-2. **Install frontend dependencies**
-   ```bash
-   npm install
-   ```
+### 3. Recommendation Model (`recommendModel.json`)
+- **Input**: Subject match, student performance level, tutor success rate, past interaction, rating, budget fit, availability overlap, review sentiment
+- **Output**: Recommendation score (0–100%)
+- **Use**: "AI Recommended Tutors" section — performance-aware recommendations
 
-3. **Install backend dependencies**
-   ```bash
-   cd server
-   npm install
-   cd ..
-   ```
+> Training script: `node server/ml/trainModels.js` — trains on 200+ data points in `server/ml/dataset.js`
 
-4. **Environment Setup**
-   - Create a `.env` file in the root directory
-   - Add your MongoDB connection string and Gemini API key:
-     ```
-     MONGODB_URI=mongodb://localhost:27017/tutor-finder
-     VITE_GEMINI_API_KEY=your_gemini_api_key_here
-     PORT=5000
-     JWT_SECRET=your_jwt_secret_here
-     ```
+---
 
-5. **Seed the database (optional)**
-   ```bash
-   cd server
-   node seed.js
-   cd ..
-   ```
+## 🚀 Quick Start
 
-## Running the Application
+### Prerequisites
+- Node.js v16+
+- MongoDB (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
+- Google Gemini API key (for chatbot)
 
-1. **Start the backend server**
-   ```bash
-   cd server
-   node server.js
-   ```
-   The server will run on http://localhost:5000
-
-2. **Start the frontend (in a new terminal)**
-   ```bash
-   npm run dev
-   ```
-   The app will be available at http://localhost:5173
-
-## Building for Production
+### 1. Clone & Install
 
 ```bash
-npm run build
-npm run preview
+git clone <repository-url>
+cd tutor-finder
+
+# Frontend dependencies
+npm install
+
+# Backend dependencies
+cd server
+npm install
+cd ..
 ```
 
-## Project Structure
+### 2. Environment Setup
+
+Create `server/.env`:
+```env
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/tutor-finder
+JWT_SECRET=your_jwt_secret_here
+PORT=5000
+```
+
+Create root `.env`:
+```env
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### 3. Train ML Models
+
+```bash
+cd server
+node ml/trainModels.js
+```
+
+### 4. Seed Demo Data
+
+```bash
+cd server
+node seedDemoAccounts.js
+```
+
+### 5. Run
+
+```bash
+# Terminal 1 — Backend
+cd server
+node server.js
+
+# Terminal 2 — Frontend
+npm run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000
+
+---
+
+## 🔑 Demo Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| Student | `alex@student.com` | `Demo@1234` |
+| Teacher | `priya@teacher.com` | `Demo@1234` |
+| Parent | `johnson@parent.com` | `Demo@1234` |
+
+---
+
+## 📁 Project Structure
 
 ```
 tutor-finder/
-├── public/                 # Static assets
+├── public/                     # Static assets
 ├── src/
-│   ├── components/         # Reusable React components
-│   ├── pages/             # Page components
-│   ├── context/           # React context providers
-│   ├── data/              # Mock data and utilities
-│   └── assets/            # Images and styles
+│   ├── components/             # Sidebar, AIChatbot, Footer, Feedback
+│   ├── pages/                  # All page components
+│   │   ├── Dashboard.jsx       # Role-based dashboards with ML cards
+│   │   ├── PracticeQuiz.jsx    # Quiz system with focus mode
+│   │   ├── ScheduleSession.jsx # Session booking form
+│   │   ├── FindTutor.jsx       # Tutor browsing with AI matching
+│   │   ├── GamifiedLearning.jsx
+│   │   ├── CareerConsultation.jsx
+│   │   └── ...
+│   ├── context/                # AuthContext, ThemeContext
+│   └── data/                   # Mock data for tutors, stats
 ├── server/
-│   ├── models/            # MongoDB models
-│   ├── routes/            # API routes
-│   ├── server.js          # Main server file
-│   └── seed.js            # Database seeding script
-├── .env                   # Environment variables (not committed)
-├── .gitignore             # Git ignore rules
-└── package.json           # Frontend dependencies and scripts
+│   ├── models/
+│   │   ├── User.js             # User schema (student/teacher/parent)
+│   │   ├── QuizScore.js        # Quiz results for ML pipeline
+│   │   └── Booking.js          # Session bookings
+│   ├── routes/
+│   │   ├── auth.js             # Register/Login with JWT
+│   │   ├── ml.js               # ML endpoints (match/performance/recommend/quiz)
+│   │   ├── teacherRoutes.js    # Teacher CRUD
+│   │   └── bookingRoutes.js    # Booking CRUD
+│   ├── ml/
+│   │   ├── dataset.js          # Training data (200+ samples)
+│   │   └── trainModels.js      # brain.js model training script
+│   ├── seed.js                 # Quick seed script
+│   └── seedDemoAccounts.js     # Full seed with teacher profiles
+└── package.json
 ```
 
-## API Endpoints
+---
 
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/health` - Health check
+## 🔌 API Endpoints
 
-## Contributing
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | User registration |
+| POST | `/api/auth/login` | User login |
+| POST | `/api/ml/match` | AI tutor matching |
+| POST | `/api/ml/performance` | ML performance prediction |
+| POST | `/api/ml/recommend` | AI tutor recommendations |
+| POST | `/api/ml/quiz-score` | Save quiz result |
+| GET | `/api/ml/quiz-history/:id` | Get student quiz history |
+| GET | `/api/ml/status` | ML model status |
+| GET | `/api/teachers` | List all teachers |
+| POST | `/api/bookings` | Create a booking |
+| GET | `/api/bookings/my` | Get user's bookings |
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run linting: `npm run lint`
-5. Submit a pull request
+---
 
-## License
+## 👥 Team — DeepThink Labs
 
-This project is licensed under the ISC License.
+Built with ❤️ for the hackathon.
+
+---
+
+## 📄 License
+
+ISC License

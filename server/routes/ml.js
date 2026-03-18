@@ -7,6 +7,7 @@ const brain   = require('brain.js');
 const fs      = require('fs');
 const path    = require('path');
 const User    = require('../models/User');
+const QuizScore = require('../models/QuizScore');
 
 const ML_DIR = path.join(__dirname, '../ml');
 
@@ -271,6 +272,62 @@ router.get('/status', (req, res) => {
     recommendModel: !!recommendNet,
     status: (matchNet && perfNet && recommendNet) ? 'ready' : 'not trained',
   });
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// POST /api/ml/quiz-score
+// Body: { studentId, subject, topic, score, correct, total, timePerQuestion }
+// Saves a quiz result to the database
+// ══════════════════════════════════════════════════════════════════════════════
+router.post('/quiz-score', async (req, res) => {
+  try {
+    const { studentId, subject, topic, score, correct, total, timePerQuestion } = req.body;
+
+    if (!studentId || !subject || !topic || score === undefined || !total) {
+      return res.status(400).json({ error: 'studentId, subject, topic, score, and total are required.' });
+    }
+
+    const quizScore = await QuizScore.create({
+      studentId,
+      subject,
+      topic,
+      score: Math.round(score),
+      correct: correct || 0,
+      total,
+      timePerQuestion: timePerQuestion || 20
+    });
+
+    res.status(201).json({ success: true, quizScore });
+  } catch (err) {
+    console.error('Quiz score save error:', err);
+    res.status(500).json({ error: 'Error saving quiz score.' });
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GET /api/ml/quiz-history/:studentId
+// Returns all quiz scores for a student
+// ══════════════════════════════════════════════════════════════════════════════
+router.get('/quiz-history/:studentId', async (req, res) => {
+  try {
+    const scores = await QuizScore.find({ studentId: req.params.studentId })
+      .sort({ createdAt: -1 })
+      .limit(50);
+
+    // Transform to the format expected by the ML performance model
+    const quizHistory = scores.map(s => ({
+      score: s.score,
+      topic: s.topic,
+      timePerQuestion: s.timePerQuestion,
+      subject: s.subject,
+      date: s.createdAt
+    }));
+
+    res.json({ success: true, quizHistory });
+  } catch (err) {
+    console.error('Quiz history fetch error:', err);
+    res.status(500).json({ error: 'Error fetching quiz history.' });
+  }
 });
 
 module.exports = router;

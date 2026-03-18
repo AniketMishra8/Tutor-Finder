@@ -322,9 +322,9 @@ export const features = [
     gradient: "linear-gradient(135deg, var(--primary-500), var(--primary-400))"
   },
   {
-    icon: "🔗",
-    title: "Blockchain Verified",
-    description: "Every tutor's credentials are verified on blockchain, ensuring 100% authentic qualifications and building unshakable trust.",
+    icon: "🔒",
+    title: "AI-Verified Credentials",
+    description: "Every tutor's credentials are verified through our AI validation pipeline, ensuring 100% authentic qualifications and building unshakable trust.",
     gradient: "linear-gradient(135deg, rgba(253, 115, 51, 0.8), rgba(253, 115, 51, 0.6))"
   },
   {
@@ -362,6 +362,6 @@ export const techStack = [
   { name: "MongoDB", category: "Database", icon: "🍃", desc: "Flexible document store" },
   { name: "PostgreSQL", category: "Database", icon: "🐘", desc: "Relational data management" },
   { name: "AWS / Azure", category: "Cloud", icon: "☁️", desc: "Scalable cloud infrastructure" },
-  { name: "Ethereum / Solidity", category: "Blockchain", icon: "⛓️", desc: "Credential verification" },
+  { name: "brain.js", category: "AI/ML", icon: "🧠", desc: "Real ML-powered tutor matching & performance prediction" },
   { name: "OAuth & JWT", category: "Security", icon: "🔒", desc: "Secure authentication" }
 ];

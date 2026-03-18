@@ -9,8 +9,8 @@ import './Dashboard.css';
 
 const ML_URL = 'http://localhost:5000/api/ml';
 
-// ── Mock quiz history for demo (replace with real data from your DB later) ──
-const mockQuizHistory = [
+// ── Default quiz history for demo (used as fallback when no real data) ──
+const defaultQuizHistory = [
   { score: 80, topic: 'Algebra',    timePerQuestion: 18 },
   { score: 60, topic: 'Geometry',   timePerQuestion: 25 },
   { score: 90, topic: 'Calculus',   timePerQuestion: 15 },
@@ -104,19 +104,20 @@ function TeacherProfilePrompt({ user, getInitials }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // ML PERFORMANCE CARD COMPONENT
 // ══════════════════════════════════════════════════════════════════════════════
-function MLPerformanceCard({ user }) {
+function MLPerformanceCard({ user, quizHistory }) {
   const [perf, setPerf]     = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchPerf() {
       try {
+        const history = quizHistory && quizHistory.length > 0 ? quizHistory : defaultQuizHistory;
         const res = await fetch(`${ML_URL}/performance`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             studentId:   user._id || user.id,
-            quizHistory: mockQuizHistory,
+            quizHistory: history,
           }),
         });
         if (res.ok) setPerf(await res.json());
@@ -127,7 +128,7 @@ function MLPerformanceCard({ user }) {
       }
     }
     fetchPerf();
-  }, [user]);
+  }, [user, quizHistory]);
 
   const levelColor = { weak: '#ef4444', average: '#f59e0b', strong: '#10b981' };
   const levelEmoji = { weak: '📚', average: '👍', strong: '🌟' };
@@ -194,7 +195,7 @@ function MLPerformanceCard({ user }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // ML RECOMMENDED TUTORS COMPONENT
 // ══════════════════════════════════════════════════════════════════════════════
-function MLRecommendedTutors({ user }) {
+function MLRecommendedTutors({ user, quizHistory }) {
   const [recs, setRecs]       = useState([]);
   const [perfLevel, setPerfLevel] = useState('');
   const [loading, setLoading] = useState(true);
@@ -225,12 +226,13 @@ function MLRecommendedTutors({ user }) {
           availability: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
         };
 
+        const history = quizHistory && quizHistory.length > 0 ? quizHistory : defaultQuizHistory;
         const res = await fetch(`${ML_URL}/recommend`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             studentProfile,
-            quizHistory: mockQuizHistory,
+            quizHistory: history,
             tutorIds,
           }),
         });
@@ -288,8 +290,49 @@ function MLRecommendedTutors({ user }) {
 // ══════════════════════════════════════════════════════════════════════════════
 function StudentDashboard({ user, getInitials }) {
   const navigate = useNavigate();
-  const { student, progressData, skillsData, recentSessions, upcomingSessions, subjectDistribution } = dashboardData;
+  const { student, progressData, skillsData, recentSessions, upcomingSessions: mockUpcoming, subjectDistribution } = dashboardData;
   const [chartView, setChartView] = useState('progress');
+  const [quizHistory, setQuizHistory] = useState([]);
+  const [realBookings, setRealBookings] = useState([]);
+
+  // Fetch real quiz history
+  useEffect(() => {
+    if (!user?.id) return;
+    fetch(`${ML_URL}/quiz-history/${user.id}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.quizHistory?.length > 0) {
+          setQuizHistory(data.quizHistory);
+        }
+      })
+      .catch(() => {});
+  }, [user]);
+
+  // Fetch real bookings
+  useEffect(() => {
+    const token = localStorage.getItem('tutor_finder_token');
+    if (!token) return;
+    fetch('http://localhost:5000/api/bookings/my', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) setRealBookings(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Merge real bookings with mock upcoming sessions
+  const allUpcoming = [
+    ...realBookings.filter(b => b.status !== 'completed' && b.status !== 'cancelled').map(b => ({
+      tutor: b.tutorName,
+      subject: b.subject,
+      date: b.date,
+      time: b.time,
+      mode: b.mode?.includes('Online') ? 'online' : 'offline'
+    })),
+    ...mockUpcoming
+  ];
 
   return (
     <div className="dashboard-page page-enter">
@@ -389,12 +432,12 @@ function StudentDashboard({ user, getInitials }) {
             </div>
 
             {/* 🔥 ML PERFORMANCE CARD */}
-            <MLPerformanceCard user={user} />
+            <MLPerformanceCard user={user} quizHistory={quizHistory} />
 
             <div className="sidebar-card glass-card">
               <h3 className="sidebar-title">📅 Upcoming Sessions</h3>
               <div className="sessions-list">
-                {upcomingSessions.map((session, i) => (
+                {allUpcoming.map((session, i) => (
                   <div key={i} className="session-item">
                     <div className="session-info"><span className="session-tutor">{session.tutor}</span><span className="session-subject">{session.subject}</span><span className="session-time">{session.date} • {session.time}</span></div>
                     <span className={`mode-tag mode-${session.mode}`}>{session.mode === 'online' ? <FaVideo /> : <FaMapMarkerAlt />} {session.mode}</span>
@@ -427,7 +470,7 @@ function StudentDashboard({ user, getInitials }) {
             </div>
 
             {/* 🔥 ML RECOMMENDED TUTORS */}
-            <MLRecommendedTutors user={user} />
+            <MLRecommendedTutors user={user} quizHistory={quizHistory} />
           </div>
         </div>
       </div>

@@ -1,29 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineUpload } from 'react-icons/hi';
 import { tutors } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
 import './ScheduleSession.css';
 
+const API_URL = 'http://localhost:5000';
+
 export default function ScheduleSession() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [dbTutors, setDbTutors] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  // Sort tutors by rating for the dropdown, or just use as-is
-  const tutorOptions = tutors.map(t => ({
+  // Fetch real tutors from DB and merge with mock
+  useEffect(() => {
+    fetch(`${API_URL}/api/teachers`)
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) setDbTutors(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Combine DB tutors + mock tutors (DB first)
+  const allTutors = [
+    ...dbTutors.map(t => ({
+      id: t.id || t._id,
+      name: t.name,
+      subjects: t.subjects || [],
+      rating: t.rating || 0,
+      isFromDB: true
+    })),
+    ...tutors.map(t => ({
+      id: t.id,
+      name: t.name,
+      subjects: t.subjects || [],
+      rating: t.rating,
+      isFromDB: false
+    }))
+  ];
+
+  const tutorOptions = allTutors.map(t => ({
     id: t.id,
-    label: `${t.name} (★ ${t.rating})`,
+    label: `${t.name}${t.rating ? ` (★ ${t.rating})` : ''}`,
+    name: t.name,
     subjects: t.subjects
   }));
 
   const [formData, setFormData] = useState({
-    tutorId: tutorOptions[2]?.id || '', // Defaulting to Ananya Iyer as per screenshot
-    subject: 'Creative Writing',
+    tutorId: '',
+    subject: '',
     date: '',
     time: '',
     mode: 'Online (Video Call)',
     notes: ''
   });
+
+  // Auto-select first tutor when options load
+  useEffect(() => {
+    if (tutorOptions.length > 0 && !formData.tutorId) {
+      const first = tutorOptions[0];
+      setFormData(prev => ({
+        ...prev,
+        tutorId: first.id.toString(),
+        subject: first.subjects[0] || ''
+      }));
+    }
+  }, [dbTutors]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,15 +84,48 @@ export default function ScheduleSession() {
     setFormData(prev => ({
       ...prev,
       tutorId: newTutorId,
-      // Auto-update subject to the newly selected tutor's first subject
       subject: selectedTutor ? selectedTutor.subjects[0] : ''
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Session Scheduled Successfully!');
-    navigate('/dashboard');
+    setError('');
+    setSubmitting(true);
+
+    const selectedTutor = tutorOptions.find(t => t.id.toString() === formData.tutorId.toString());
+
+    try {
+      const token = localStorage.getItem('tutor_finder_token');
+      const res = await fetch(`${API_URL}/api/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          tutorId: formData.tutorId,
+          tutorName: selectedTutor?.name || 'Tutor',
+          studentName: user?.name || 'Student',
+          subject: formData.subject,
+          date: formData.date,
+          time: formData.time,
+          mode: formData.mode,
+          notes: formData.notes
+        })
+      });
+
+      if (res.ok) {
+        navigate('/dashboard');
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Failed to book session. Please try again.');
+      }
+    } catch (err) {
+      setError('Could not connect to server. Please ensure the backend is running.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -60,6 +138,11 @@ export default function ScheduleSession() {
         </div>
 
         <div className="schedule-card">
+          {error && (
+            <div style={{ padding: '12px 16px', marginBottom: 16, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, color: '#ef4444', fontSize: '0.85rem' }}>
+              ❌ {error}
+            </div>
+          )}
           <form className="schedule-form" onSubmit={handleSubmit}>
             
             {/* Tutor Selection */}
@@ -95,12 +178,9 @@ export default function ScheduleSession() {
                   required
                 >
                   <option value="" disabled>Select a subject...</option>
-                  {/* Find currently selected tutor and map their subjects */}
                   {tutorOptions.find(t => t.id.toString() === formData.tutorId.toString())?.subjects.map(sub => (
                     <option key={sub} value={sub}>{sub}</option>
                   ))}
-                  {/* Fallback if no tutor selected */}
-                  {!formData.tutorId && <option value="Creative Writing">Creative Writing</option>}
                 </select>
               </div>
             </div>
@@ -190,8 +270,8 @@ export default function ScheduleSession() {
             </div>
 
             <div className="schedule-submit-container">
-              <button type="submit" className="btn btn-primary schedule-submit-btn">
-                Confirm Booking
+              <button type="submit" className="btn btn-primary schedule-submit-btn" disabled={submitting}>
+                {submitting ? '⏳ Booking...' : 'Confirm Booking'}
               </button>
             </div>
 

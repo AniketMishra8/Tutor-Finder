@@ -189,7 +189,7 @@ export default function Home() {
           <div className="section-header">
             <h2 className="section-title">Why Choose Us?</h2>
             <p className="section-subtitle">
-              Powered by cutting-edge AI and blockchain technology to deliver the best learning experience.
+              Powered by cutting-edge AI and machine learning technology to deliver the best learning experience.
             </p>
           </div>
           <div className="features-grid">

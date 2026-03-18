@@ -5,6 +5,8 @@ const cors     = require('cors');
 
 const authRoutes = require('./routes/auth');
 const mlRoutes   = require('./routes/ml');
+const teacherRoutes = require('./routes/teacherRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/ml',   mlRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

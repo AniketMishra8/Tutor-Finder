@@ -9,9 +9,9 @@ const User = require('./models/User');
 const MONGODB_URI = process.env.MONGODB_URI;
 
 const demoUsers = [
-  { name: 'Alex Johnson',    email: 'alex@student.com',   password: 'password', role: 'student' },
-  { name: 'Dr. Priya Sharma', email: 'priya@teacher.com', password: 'password', role: 'teacher' },
-  { name: 'Mr. Johnson',     email: 'johnson@parent.com', password: 'password', role: 'parent', studentEmail: 'alex@student.com' }
+  { name: 'Alex Johnson',    email: 'alex@student.com',   password: 'Demo@1234', role: 'student' },
+  { name: 'Dr. Priya Sharma', email: 'priya@teacher.com', password: 'Demo@1234', role: 'teacher' },
+  { name: 'Mr. Johnson',     email: 'johnson@parent.com', password: 'Demo@1234', role: 'parent', studentEmail: 'alex@student.com' }
 ];
 
 async function seed() {

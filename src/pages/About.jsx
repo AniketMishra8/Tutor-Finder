@@ -1,10 +1,10 @@
 import { techStack } from '../data/mockData';
 import { HiOutlineShieldCheck, HiOutlineLightningBolt } from 'react-icons/hi';
-import { FaEthereum } from 'react-icons/fa';
+import { FaBrain } from 'react-icons/fa';
 import './About.css';
 
 export default function About() {
-  const categories = ['Frontend', 'Backend', 'AI/ML', 'Database', 'Cloud', 'Blockchain', 'Security'];
+  const categories = ['Frontend', 'Backend', 'AI/ML', 'Database', 'Cloud', 'Security'];
 
   return (
     <div className="about-page page-enter">
@@ -22,11 +22,11 @@ export default function About() {
           </h1>
           <p className="about-desc animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             Building the future of smart education through AI-powered tutor matching,
-            blockchain credential verification, and seamless hybrid learning.
+            ML-driven performance analytics, and seamless hybrid learning.
           </p>
           <div className="about-meta animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             <span className="badge badge-primary">✨ AI-Powered Matching</span>
-            <span className="badge badge-cyan">🔒 Verified Credentials</span>
+            <span className="badge badge-cyan">🔒 AI-Verified Credentials</span>
             <span className="badge badge-success">📚 Personalized Learning</span>
           </div>
         </div>
@@ -87,10 +87,10 @@ export default function About() {
               <div className="arch-layer-label">☁️ Infrastructure</div>
               <div className="arch-nodes">
                 <div className="arch-node">AWS / Azure Cloud</div>
-                <div className="arch-node arch-blockchain">
-                  <FaEthereum style={{ marginRight: 4 }} /> Ethereum Blockchain
+                <div className="arch-node">
+                  <FaBrain style={{ marginRight: 4 }} /> brain.js ML Engine
                 </div>
-                <div className="arch-node">ML Pipeline</div>
+                <div className="arch-node">CI/CD Pipeline</div>
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function About() {
               { icon: '🌍', title: 'Social Impact', desc: 'Builds access to quality tutoring regardless of location or circumstances.', color: '#8b5cf6' },
               { icon: '💰', title: 'Economic Impact', desc: 'Creates income opportunities for local and remote tutors.', color: '#10b981' },
               { icon: '📚', title: 'Educational Impact', desc: 'Combines flexibility of online with engagement of offline sessions.', color: '#06b6d4' },
-              { icon: '🔬', title: 'Technological Impact', desc: 'Empowers adoption of AI, blockchain, and AR/VR for immersive learning.', color: '#f59e0b' }
+              { icon: '🔬', title: 'Technological Impact', desc: 'Empowers adoption of AI/ML, real-time analytics, and AR/VR for immersive learning.', color: '#f59e0b' }
             ].map((item, i) => (
               <div key={i} className="impact-card glass-card" style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="impact-icon" style={{ background: `${item.color}15`, border: `1px solid ${item.color}30` }}>
@@ -159,7 +159,7 @@ export default function About() {
             <div className="feasibility-card glass-card">
               <h3><HiOutlineLightningBolt /> Feasibility</h3>
               <ul>
-                <li><strong>Proven Technologies:</strong> Scalable web, AI/ML, blockchain, and cloud tools.</li>
+                <li><strong>Proven Technologies:</strong> Scalable web, AI/ML, and cloud tools.</li>
                 <li><strong>Low Initial Investment:</strong> Cloud-based deployment minimizes infrastructure cost.</li>
               </ul>
             </div>

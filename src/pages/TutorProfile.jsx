@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { HiOutlineStar, HiOutlineBadgeCheck, HiOutlineClock, HiOutlineGlobe, HiOutlineCalendar, HiOutlineChatAlt2 } from 'react-icons/hi';
-import { FaVideo, FaMapMarkerAlt, FaEthereum, FaChevronLeft } from 'react-icons/fa';
+import { FaVideo, FaMapMarkerAlt, FaChevronLeft } from 'react-icons/fa';
 import { tutors } from '../data/mockData';
 import './TutorProfile.css';
 
@@ -35,9 +35,8 @@ export default function TutorProfile() {
                   <h1 className="profile-name">{tutor.name}</h1>
                   {tutor.verified && (
                     <div className="blockchain-badge">
-                      <FaEthereum className="eth-icon" />
                       <HiOutlineBadgeCheck />
-                      <span>Blockchain Verified</span>
+                      <span>AI Verified</span>
                     </div>
                   )}
                 </div>

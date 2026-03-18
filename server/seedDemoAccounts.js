@@ -11,7 +11,7 @@ const seedDemoAccounts = async () => {
     console.log('Connected to MongoDB');
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('password', salt);
+    const hashedPassword = await bcrypt.hash('Demo@1234', salt);
 
     const demoUsers = [
       {
@@ -42,6 +42,86 @@ const seedDemoAccounts = async () => {
         password: hashedPassword,
         role: 'parent',
         studentEmail: 'alex@student.com'.toLowerCase()
+      },
+      {
+        name: 'Arjun Mehta',
+        email: 'arjun@teacher.com'.toLowerCase(),
+        password: hashedPassword,
+        role: 'teacher',
+        isProfileComplete: true,
+        subjects: ['Computer Science', 'AI/ML'],
+        bio: 'Former Google engineer turned educator. Expert in Data Structures, Machine Learning, and Full-Stack Development.',
+        hourlyRate: 1000,
+        experience: '6 years',
+        location: 'Bangalore, India',
+        qualifications: ['M.Tech CS - IISc Bangalore', 'Google Certified ML Engineer'],
+        languages: ['English', 'Hindi', 'Kannada'],
+        mode: ['online'],
+        availability: ['Tue', 'Thu', 'Sat', 'Sun']
+      },
+      {
+        name: 'Ananya Iyer',
+        email: 'ananya@teacher.com'.toLowerCase(),
+        password: hashedPassword,
+        role: 'teacher',
+        isProfileComplete: true,
+        subjects: ['English', 'Creative Writing'],
+        bio: 'Published author and language enthusiast. Helps students master English communication and creative expression.',
+        hourlyRate: 600,
+        experience: '5 years',
+        location: 'Mumbai, India',
+        qualifications: ['MA English Literature', 'CELTA Certified', 'Published Author'],
+        languages: ['English', 'Hindi', 'Marathi'],
+        mode: ['online', 'offline'],
+        availability: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+      },
+      {
+        name: 'Dr. Sarah Chen',
+        email: 'sarah@teacher.com'.toLowerCase(),
+        password: hashedPassword,
+        role: 'teacher',
+        isProfileComplete: true,
+        subjects: ['History', 'Political Science'],
+        bio: 'Former university professor making history come alive through storytelling and primary source analysis.',
+        hourlyRate: 850,
+        experience: '12 years',
+        location: 'Chennai, India',
+        qualifications: ['PhD History - JNU', 'MA Political Science'],
+        languages: ['English', 'Tamil'],
+        mode: ['online'],
+        availability: ['Sat', 'Sun']
+      },
+      {
+        name: 'Vikram Rathore',
+        email: 'vikram@teacher.com'.toLowerCase(),
+        password: hashedPassword,
+        role: 'teacher',
+        isProfileComplete: true,
+        subjects: ['Biology', 'Chemistry'],
+        bio: 'MBBS graduate passionate about teaching NEET aspirants. Combines medical knowledge with engaging teaching methods.',
+        hourlyRate: 700,
+        experience: '4 years',
+        location: 'Pune, India',
+        qualifications: ['MBBS - AIIMS Pune', 'B.Sc Biology'],
+        languages: ['English', 'Hindi', 'Marathi'],
+        mode: ['offline', 'online'],
+        availability: ['Mon', 'Wed', 'Sat', 'Sun']
+      },
+      {
+        name: 'Rajesh Kumar',
+        email: 'rajesh@teacher.com'.toLowerCase(),
+        password: hashedPassword,
+        role: 'teacher',
+        isProfileComplete: true,
+        subjects: ['Economics', 'Business Studies'],
+        bio: 'CA and MBA with deep expertise in economics and business. Makes dry subjects engaging with real-world case studies.',
+        hourlyRate: 750,
+        experience: '7 years',
+        location: 'Kolkata, India',
+        qualifications: ['MBA - IIM Calcutta', 'CA - ICAI'],
+        languages: ['English', 'Hindi', 'Bengali'],
+        mode: ['online'],
+        availability: ['Mon', 'Tue', 'Wed', 'Thu']
       }
     ];
 
